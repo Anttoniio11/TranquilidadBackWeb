@@ -1,8 +1,9 @@
 <?php
 use App\Http\Controllers\Api\CarpetaController;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Api\PincelController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,4 +28,6 @@ Route::controller(UserController::class)->group(function(){
     Route::delete('users/{user}', 'destroy')->name('api.v1.users.delete');
 });
 */
+Route::get('pincels', [PincelController::class,'index'])->name('api.v1.pincels.index');
+Route::post('pincels', [PincelController::class,'store'])->name('api.v1.pincels.store');
 
