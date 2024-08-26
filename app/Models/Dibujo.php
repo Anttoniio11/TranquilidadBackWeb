@@ -9,6 +9,8 @@ class Dibujo extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['nombre_dibujo','contenido_dibujo'];
+
     public function user(){
         return $this->belongsTo(User::class);
     }

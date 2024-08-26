@@ -9,6 +9,8 @@ class Compartido extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['red_social'];
+    
     public function user(){
         return $this->belongsTo(User::class);
     }

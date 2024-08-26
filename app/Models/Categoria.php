@@ -9,6 +9,8 @@ class Categoria extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['nombre_categoria'];
+
     public function plantilla(){
         return $this->hasOne(Plantilla::class);
     }
