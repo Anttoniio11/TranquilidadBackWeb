@@ -9,12 +9,12 @@ class PinturaController extends Controller
 {
     public function index()
     {
-        $shapes=Pintura::all();
-        //$shapes = Pintura::included()->get();
-        //$shapes= Pintura::included()->filter();
-        //$shapes=Pintura::included()->filter()->sort()->get();
-        //$shapes=Pintura::included()->filter()->sort()->getOrPaginate();
-        return response()->json($shapes);
+       // $paints =Pintura::all();
+        $paints = Pintura::included()->get();
+        //$paints = Pintura::included()->filter();
+        //$paints =Pintura::included()->filter()->sort()->get();
+        //$paints =Pintura::included()->filter()->sort()->getOrPaginate();
+        return response()->json($paints);
     }
 
     /**
@@ -32,21 +32,21 @@ class PinturaController extends Controller
           
         ]);
 
-        $shape = Pintura::create($request->all());
+        $paint = Pintura::create($request->all());
 
-        return response()->json($shape);
+        return response()->json($paint);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Pintura  $shape
+     * @param  \App\Models\Pintura  $paint
      * @return \Illuminate\Http\Response
      */
     public function show($id) //si se pasa $id se utiliza la comentada
     {  
-        $shape = Pintura::included()->findOrFail($id);
-        return response()->json($shape);
+        $paint = Pintura::included()->findOrFail($id);
+        return response()->json($paint);
 
     }
 
@@ -54,30 +54,30 @@ class PinturaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Pintura  $shape
+     * @param  \App\Models\Pintura  $paint
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pintura $shape)
+    public function update(Request $request, Pintura $paint)
     {
         $request->validate([
            'nombre_Pintura' => 'required|max:255',
             'contenido_pintura' => 'required|max:255',
         ]);
 
-        $shape->update($request->all());
+        $paint->update($request->all());
 
-        return response()->json($shape);
+        return response()->json($paint);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Pintura  $shape
+     * @param  \App\Models\Pintura  $paint
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pintura $shape)
+    public function destroy(Pintura $paint)
     {
-        $shape->delete();
-        return response()->json($shape);
+        $paint->delete();
+        return response()->json($paint);
     }
 }

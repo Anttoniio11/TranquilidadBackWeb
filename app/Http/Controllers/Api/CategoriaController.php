@@ -10,8 +10,8 @@ class CategoriaController extends Controller
     //
     public function index()
     {
-        $categories=Categoria::all();
-        //$categories = Categoria::included()->get();
+        //$categories=Categoria::all();
+        $categories = Categoria::included()->get();
         //$categories=Categoria::included()->filter();
         //$categories=Categoria::included()->filter()->sort()->get();
         //$categories=Categoria::included()->filter()->sort()->getOrPaginate();
@@ -46,9 +46,10 @@ class CategoriaController extends Controller
      */
     public function show($id) //si se pasa $id se utiliza la comentada
     {  
-        
+        //$category = Categoria::findOrFail($id);
         $category = Categoria::included()->findOrFail($id);
         return response()->json($category);
+        //http://tranquilidad.test/v1/categories/1/?included=plantilla
         
 
     }

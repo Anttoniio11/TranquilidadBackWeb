@@ -9,12 +9,12 @@ class PlantillaController extends Controller
 {
     public function index()
     {
-        $shapes=Plantilla::all();
-        //$shapes = Plantilla::included()->get();
-        //$shapes= Plantilla::included()->filter();
-        //$shapes=Plantilla::included()->filter()->sort()->get();
-        //$shapes=Plantilla::included()->filter()->sort()->getOrPaginate();
-        return response()->json($shapes);
+        //$templates=Plantilla::all();
+        $templates = Plantilla::included()->get();
+        //$templates= Plantilla::included()->filter();
+        //$templates=Plantilla::included()->filter()->sort()->get();
+        //$templates=Plantilla::included()->filter()->sort()->getOrPaginate();
+        return response()->json($templates);
     }
 
     /**
@@ -27,26 +27,26 @@ class PlantillaController extends Controller
     {
 
         $request->validate([
-            'nombre_Plantilla' => 'required|max:255',
+            'categoria_id' => 'required|exists:categorias,id',
+            'nombre_plantilla' => 'required|max:255',
             'contenido_plantilla' => 'required|max:255',
-          
         ]);
 
-        $shape = Plantilla::create($request->all());
+        $template = Plantilla::create($request->all());
 
-        return response()->json($shape);
+        return response()->json($template);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Plantilla  $shape
+     * @param  \App\Models\Plantilla  $template
      * @return \Illuminate\Http\Response
      */
     public function show($id) //si se pasa $id se utiliza la comentada
     {  
-        $shape = Plantilla::included()->findOrFail($id);
-        return response()->json($shape);
+        $template = Plantilla::included()->findOrFail($id);
+        return response()->json($template);
 
     }
 
@@ -54,31 +54,32 @@ class PlantillaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Plantilla  $shape
+     * @param  \App\Models\Plantilla  $template
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Plantilla $shape)
+    public function update(Request $request, Plantilla $template)
     {
         $request->validate([
-           'nombre_Plantilla' => 'required|max:255',
+            'categoria_id' => 'required|exists:categorias,id',
+            'nombre_Plantilla' => 'required|max:255',
             'contenido_plantilla' => 'required|max:255',
             
         ]);
 
-        $shape->update($request->all());
+        $template->update($request->all());
 
-        return response()->json($shape);
+        return response()->json($template);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Plantilla  $shape
+     * @param  \App\Models\Plantilla  $template
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Plantilla $shape)
+    public function destroy(Plantilla $template)
     {
-        $shape->delete();
-        return response()->json($shape);
+        $template->delete();
+        return response()->json($template);
     }
 }

@@ -10,8 +10,8 @@ class CompartidoController extends Controller
     //
     public function index()
     {
-        $shared=Compartido::all();
-        //$shared = Compartido::included()->get();
+        //$shared=Compartido::all();
+        $shared = Compartido::included()->get();
         //$shared=Compartido::included()->filter();
         //$shared=Compartido::included()->filter()->sort()->get();
         //$shared=Compartido::included()->filter()->sort()->getOrPaginate();
@@ -28,9 +28,9 @@ class CompartidoController extends Controller
     {
 
         $request->validate([
+            'user_id'=> 'required|exists:users,id',
+            'publicacion_id'=> 'required|exists:publicacions,id',
             'red_social' => 'required|max:255',
-           
-
         ]);
 
         $shared = Compartido::create($request->all());
@@ -61,7 +61,9 @@ class CompartidoController extends Controller
     public function update(Request $request,Compartido $shared)
     {
         $request->validate([
-            'red_social' => 'required|max:255'. $shared->id,
+            'user_id'=> 'required|exists:users,id',
+            'publicacion_id'=> 'required|exists:publicaciones,id',
+            'red_social' => 'required|max:255'
 
         ]);
 

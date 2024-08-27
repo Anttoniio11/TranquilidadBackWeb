@@ -1,9 +1,14 @@
 <?php
-use App\Http\Controllers\Api\CarpetaController;
+use App\Http\Controllers\Api\CategoriaController;
+use App\Http\Controllers\Api\CompartidoController;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PincelController;
+use App\Http\Controllers\Api\PinturaController;
+use App\Http\Controllers\Api\PlantillaController;
+use App\Models\Plantilla;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,3 +36,34 @@ Route::controller(UserController::class)->group(function(){
 Route::get('pincels', [PincelController::class,'index'])->name('api.v1.pincels.index');
 Route::post('pincels', [PincelController::class,'store'])->name('api.v1.pincels.store');
 
+Route::controller(CategoriaController::class)->group(function(){
+    Route::post('categories', 'store')->name('api.v1.categories.store');
+    Route::get('categories', 'index')->name('api.v1.categories.index');
+    Route::put('categories/{categorie}', 'update')->name('api.v1.categories.update');
+    Route::get('categories/{categorie}', 'show')->name('api.v1.categories.show');
+    Route::delete('categories/{categorie}', 'destroy')->name('api.v1.categories.delete');
+});
+
+Route::controller(CompartidoController::class)->group(function(){
+    Route::post('shared', 'store')->name('api.v1.shared.store');
+    Route::get('shared', 'index')->name('api.v1.shared.index');
+    Route::put('shared/{shared}', 'update')->name('api.v1.shared.update');
+    Route::get('shared/{shared}', 'show')->name('api.v1.shared.show');
+    Route::delete('shared/{shared}', 'destroy')->name('api.v1.shared.delete');
+});
+
+Route::controller(PlantillaController::class)->group(function(){
+    Route::post('templates', 'store')->name('api.v1.templates.store');
+    Route::get('templates', 'index')->name('api.v1.templates.index');
+    Route::put('templates/{templates}', 'update')->name('api.v1.templates.update');
+    Route::get('templates/{templates}', 'show')->name('api.v1.templates.show');
+    Route::delete('templates/{templates}', 'destroy')->name('api.v1.templates.delete');
+});
+
+Route::controller(PinturaController::class)->group(function(){
+    Route::post('paints', 'store')->name('api.v1.paints.store');
+    Route::get('paints', 'index')->name('api.v1.paints.index');
+    Route::put('paints/{paint}', 'update')->name('api.v1.paints.update');
+    Route::get('paints/{paint}', 'show')->name('api.v1.paints.show');
+    Route::delete('paints/{paint}', 'destroy')->name('api.v1.paints.delete');
+});

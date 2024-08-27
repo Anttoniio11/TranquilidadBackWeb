@@ -9,12 +9,12 @@ class ReaccionController extends Controller
 {
     public function index()
     {
-        $shapes=Reaccion::all();
-        //$shapes = Reaccion::included()->get();
-        //$shapes= Reaccion::included()->filter();
-        //$shapes=Reaccion::included()->filter()->sort()->get();
-        //$shapes=Reaccion::included()->filter()->sort()->getOrPaginate();
-        return response()->json($shapes);
+        $reactions=Reaccion::all();
+        //$reactions = Reaccion::included()->get();
+        //$reactions= Reaccion::included()->filter();
+        //$reactions=Reaccion::included()->filter()->sort()->get();
+        //$reactions=Reaccion::included()->filter()->sort()->getOrPaginate();
+        return response()->json($reactions);
     }
 
     /**
@@ -33,21 +33,21 @@ class ReaccionController extends Controller
           
         ]);
 
-        $shape = Reaccion::create($request->all());
+        $reaction = Reaccion::create($request->all());
 
-        return response()->json($shape);
+        return response()->json($reaction);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Reaccion  $shape
+     * @param  \App\Models\Reaccion  $reaction
      * @return \Illuminate\Http\Response
      */
     public function show($id) //si se pasa $id se utiliza la comentada
     {  
-        $shape = Reaccion::included()->findOrFail($id);
-        return response()->json($shape);
+        $reaction= Reaccion::included()->findOrFail($id);
+        return response()->json($reaction);
 
     }
 
@@ -55,30 +55,30 @@ class ReaccionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Reaccion  $shape
+     * @param  \App\Models\Reaccion  $reaction
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Reaccion $shape)
+    public function update(Request $request, Reaccion $reaction)
     {
         $request->validate([
            'tipo_reaccion' => 'required|max:255',
             
         ]);
 
-        $shape->update($request->all());
+        $reaction->update($request->all());
 
-        return response()->json($shape);
+        return response()->json($reaction);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Reaccion  $shape
+     * @param  \App\Models\Reaccion  $reaction
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Reaccion $shape)
+    public function destroy(Reaccion $reaction)
     {
-        $shape->delete();
-        return response()->json($shape);
+        $reaction->delete();
+        return response()->json($reaction);
     }
 }

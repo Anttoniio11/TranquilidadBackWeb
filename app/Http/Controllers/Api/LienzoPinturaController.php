@@ -9,12 +9,12 @@ class LienzoPinturaController extends Controller
 {
     public function index()
     {
-        $shapes=LienzoPintura::all();
-        //$shapes = LienzoPintura::included()->get();
-        //$shapes= LienzoPintura::included()->filter();
-        //$shapes=LienzoPintura::included()->filter()->sort()->get();
-        //$shapes=LienzoPintura::included()->filter()->sort()->getOrPaginate();
-        return response()->json($shapes);
+        $canvases=LienzoPintura::all();
+        //$canvases= LienzoPintura::included()->get();
+        //$canvases= LienzoPintura::included()->filter();
+        //$canvases=LienzoPintura::included()->filter()->sort()->get();
+        //$canvases=LienzoPintura::included()->filter()->sort()->getOrPaginate();
+        return response()->json($canvases);
     }
 
     /**
@@ -30,21 +30,21 @@ class LienzoPinturaController extends Controller
            
         ]);
 
-        $shape = LienzoPintura::create($request->all());
+        $canvas = LienzoPintura::create($request->all());
 
-        return response()->json($shape);
+        return response()->json($canvas);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\LienzoPintura  $shape
+     * @param  \App\Models\LienzoPintura  $canvas
      * @return \Illuminate\Http\Response
      */
     public function show($id) //si se pasa $id se utiliza la comentada
     {  
-        $shape = LienzoPintura::included()->findOrFail($id);
-        return response()->json($shape);
+        $canvas = LienzoPintura::included()->findOrFail($id);
+        return response()->json($canvas);
 
     }
 
@@ -52,29 +52,29 @@ class LienzoPinturaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\LienzoPintura  $shape
+     * @param  \App\Models\LienzoPintura  $canvas
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, LienzoPintura $shape)
+    public function update(Request $request, LienzoPintura $canvas)
     {
         $request->validate([
            
         ]);
 
-        $shape->update($request->all());
+        $canvas->update($request->all());
 
-        return response()->json($shape);
+        return response()->json($canvas);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\LienzoPintura  $shape
+     * @param  \App\Models\LienzoPintura  $canvas
      * @return \Illuminate\Http\Response
      */
-    public function destroy(LienzoPintura $shape)
+    public function destroy(LienzoPintura $canvas)
     {
-        $shape->delete();
-        return response()->json($shape);
+        $canvas->delete();
+        return response()->json($canvas);
     }
 }

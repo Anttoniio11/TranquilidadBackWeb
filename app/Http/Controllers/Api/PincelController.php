@@ -9,12 +9,12 @@ class PincelController extends Controller
 {
     public function index()
     {
-        $shapes=Pincel::all();
-        //$shapes = Pincel::included()->get();
-        //$shapes= Pincel::included()->filter();
-        //$shapes=Pincel::included()->filter()->sort()->get();
-        //$shapes=Pincel::included()->filter()->sort()->getOrPaginate();
-        return response()->json($shapes);
+        $brushes=Pincel::all();
+        //$brushes = Pincel::included()->get();
+        //$brushes= Pincel::included()->filter();
+        //$brushes=Pincel::included()->filter()->sort()->get();
+        //$brushes=Pincel::included()->filter()->sort()->getOrPaginate();
+        return response()->json($brushes);
     }
 
     /**
@@ -34,21 +34,21 @@ class PincelController extends Controller
           
         ]);
 
-        $shape = Pincel::create($request->all());
+        $brush = Pincel::create($request->all());
 
-        return response()->json($shape);
+        return response()->json($brush);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Pincel  $shape
+     * @param  \App\Models\Pincel  $brush
      * @return \Illuminate\Http\Response
      */
     public function show($id) //si se pasa $id se utiliza la comentada
     {  
-        $shape = Pincel::included()->findOrFail($id);
-        return response()->json($shape);
+        $brush= Pincel::included()->findOrFail($id);
+        return response()->json($brush);
 
     }
 
@@ -56,10 +56,10 @@ class PincelController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Pincel  $shape
+     * @param  \App\Models\Pincel  $brush
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pincel $shape)
+    public function update(Request $request, Pincel $brush)
     {
         $request->validate([
            'nombre_pincel' => 'required|max:255',
@@ -67,20 +67,20 @@ class PincelController extends Controller
             'estilo_trazo' => 'required|max:255',
         ]);
 
-        $shape->update($request->all());
+        $brush->update($request->all());
 
-        return response()->json($shape);
+        return response()->json($brush);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Pincel  $shape
+     * @param  \App\Models\Pincel  $brush
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pincel $shape)
+    public function destroy(Pincel $brush)
     {
-        $shape->delete();
-        return response()->json($shape);
+        $brush->delete();
+        return response()->json($brush);
     }
 }

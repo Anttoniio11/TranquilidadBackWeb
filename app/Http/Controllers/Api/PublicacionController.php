@@ -9,12 +9,12 @@ class PublicacionController extends Controller
 {
     public function index()
     {
-        $shapes=Publicacion::all();
-        //$shapes = Publicacion::included()->get();
-        //$shapes= Publicacion::included()->filter();
-        //$shapes=Publicacion::included()->filter()->sort()->get();
-        //$shapes=Publicacion::included()->filter()->sort()->getOrPaginate();
-        return response()->json($shapes);
+        $publications=Publicacion::all();
+        //$publications = Publicacion::included()->get();
+        //$publications= Publicacion::included()->filter();
+        //$publications=Publicacion::included()->filter()->sort()->get();
+        //$publications=Publicacion::included()->filter()->sort()->getOrPaginate();
+        return response()->json($publications);
     }
 
     /**
@@ -36,21 +36,21 @@ class PublicacionController extends Controller
           
         ]);
 
-        $shape = Publicacion::create($request->all());
+        $publication= Publicacion::create($request->all());
 
-        return response()->json($shape);
+        return response()->json($publication);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Publicacion  $shape
+     * @param  \App\Models\Publicacion  $publication
      * @return \Illuminate\Http\Response
      */
     public function show($id) //si se pasa $id se utiliza la comentada
     {  
-        $shape = Publicacion::included()->findOrFail($id);
-        return response()->json($shape);
+        $publication = Publicacion::included()->findOrFail($id);
+        return response()->json($publication);
 
     }
 
@@ -58,10 +58,10 @@ class PublicacionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Publicacion  $shape
+     * @param  \App\Models\Publicacion  $publication
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Publicacion $shape)
+    public function update(Request $request, Publicacion $publication)
     {
         $request->validate([
            'nombre_Publicacion' => 'required|max:255',
@@ -71,20 +71,20 @@ class PublicacionController extends Controller
 
         ]);
 
-        $shape->update($request->all());
+        $publication->update($request->all());
 
-        return response()->json($shape);
+        return response()->json($publication);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Publicacion  $shape
+     * @param  \App\Models\Publicacion  $publication
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Publicacion $shape)
+    public function destroy(Publicacion $publication)
     {
-        $shape->delete();
-        return response()->json($shape);
+        $publication->delete();
+        return response()->json($publication);
     }
 }
