@@ -42,4 +42,32 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+
+    /**
+     * Relación de uno a muchos con el modelo Playlist.
+     */
+    public function playlists()
+    {
+        return $this->hasMany(Playlist::class);
+    }
+
+    /**
+     * Relación de uno a muchos con el modelo Like.
+     */
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    /**
+     * Relación de uno a muchos con el modelo History.
+     */
+    public function histories()
+    {
+        return $this->hasMany(History::class);
+    }
+
+
 }

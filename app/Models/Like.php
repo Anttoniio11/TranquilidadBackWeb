@@ -8,4 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Like extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+
+
+    // Relación polimórfica inversa
+    public function likeable()
+    {
+        return $this->morphTo();
+    }
+
+    // Relación con el modelo User
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class BinauralSound extends Model
 {
     use HasFactory;
+
+    protected $guarded =[];
+
+    // Relación de uno a muchos con el modelo Audio
+    public function audios()
+    {
+        return $this->hasMany(Audio::class);
+    }
 }
