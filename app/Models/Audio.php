@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Audio extends Model
 {
     use HasFactory;
+
+    protected $table = 'audios';
     protected $guarded = [];
 
     // Relación con el modelo Genre

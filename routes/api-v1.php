@@ -27,7 +27,9 @@ use App\Http\Controllers\Api\HistoryController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-//http://tranquilidad.test/v1/audios
+
+//->names('api.v1.genres')
+//http://tranquilidad.test/v1/genres
 
 
 // Rutas para Audio
