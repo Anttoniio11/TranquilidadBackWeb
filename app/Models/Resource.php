@@ -11,11 +11,11 @@ class Resource extends Model
 
     //Relacion muchos a muchos con patient
     public function patient(){
-        return $this->belongsToMany('App\Models\Patient');
+        return $this->belongsToMany(Patient::class);
     }
 
     //Relacion uno a muchos con professional
     public function professional(){
-        return $this->belongsTo('App\Models\Professional');
+        return $this->belongsTo(Professional::class);
     }
 }

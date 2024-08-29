@@ -11,26 +11,26 @@ class Patient extends Model
 
     //Relacion muchos a muchos con resource
     public function resource(){
-        return $this->belongsToMany('App\Models\Resource');
+        return $this->belongsToMany(Resource::class);
     }
 
     //Relacion uno a muchos con appointment
     public function appointment(){
-        return $this->hasMany('App\Models\Appointment');
+        return $this->hasMany(Appointment::class);
     }
 
     //Relacion uno a muchos con message
     public function message(){
-        return $this->hasMany('App\Models\Message');
+        return $this->hasMany(Message::class);
     }
 
     //Relacion uno a muchos con bill
     public function bill(){
-        return $this->hasMany('App\Models\Bill');
+        return $this->hasMany(Bill::class);
     }
 
     //Relacion uno a uno con review
     public function review(){
-        return $this->hasOne('App\Models\Review');
+        return $this->hasOne(Review::class);
     }
 }

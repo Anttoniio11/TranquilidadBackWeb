@@ -11,11 +11,11 @@ class Appointment extends Model
 
     //Relacion uno a muchos con patient
     public function patient(){
-        return $this->belongsTo('App\Models\Patient');
+        return $this->belongsTo(Patient::class);
     }
 
     //Relacion uno a muchos con professional
     public function professional(){
-        return $this->belongsTo('App\Models\Professional');
+        return $this->belongsTo(Professional::class);
     }
 }

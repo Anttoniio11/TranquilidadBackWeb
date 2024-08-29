@@ -11,11 +11,11 @@ class Review extends Model
 
     //Relacion uno a uno con patient
     public function patient(){
-        return $this->belongsTo('App\Models\Patient');
+        return $this->belongsTo(Patient::class);
     }
 
     //Relacion uno a uno con professional
     public function professional(){
-        return $this->belongsTo('App\Models\Professional');
+        return $this->belongsTo(Professional::class);
     }
 }

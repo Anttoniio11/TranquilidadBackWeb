@@ -11,21 +11,21 @@ class Professional extends Model
 
     //Relacion muchos a muchos con profession
     public function profession(){
-        return $this->belongsToMany('App\Models\Profession');
+        return $this->belongsToMany(Profession::class);
     }
 
     //Relacion uno a muchos con appointment
     public function appointment(){
-        return $this->hasMany('App\Models\Appointment');
+        return $this->hasMany(Appointment::class);
     }
 
     //Relacion uno a muchos con resource
     public function resource(){
-        return $this->hasMany('App\Models\Resource');
+        return $this->hasMany(Resource::class);
     }
 
     //Relacion uno a uno con review
     public function review(){
-        return $this->hasOne('App\Models\Review');
+        return $this->hasOne(Review::class);
     }
 }

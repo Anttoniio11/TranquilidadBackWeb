@@ -11,6 +11,6 @@ class MethodPayment extends Model
 
     //Relacion uno a uno con bill
     public function bill(){
-        return $this->belongsTo('App\Models\Bill');
+        return $this->belongsTo(Bill::class);
     }
 }

@@ -11,6 +11,6 @@ class Chat extends Model
 
     //Relacion uno a muchos con message
     public function message(){
-        return $this->hasMany('App\Models\Message');
+        return $this->hasMany(Message::class);
     }
 }

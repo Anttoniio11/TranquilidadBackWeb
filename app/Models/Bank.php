@@ -11,6 +11,6 @@ class Bank extends Model
 
     //Relacion uno a muchos con bill
     public function bill(){
-        return $this->hasMany('App\Models\Bill');
+        return $this->hasMany(Bill::class);
     }
 }

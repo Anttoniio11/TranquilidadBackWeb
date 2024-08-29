@@ -11,16 +11,16 @@ class Bill extends Model
 
     //Relacion uno a muchos con patient
     public function patient(){
-        return $this->belongsTo('App\Models\patient');
+        return $this->belongsTo(Patient::class);
     }
 
     //Relacion uno a muchos con bank
     public function bank(){
-        return $this->belongsTo('App\Models\Bank');
+        return $this->belongsTo(Bank::class);
     }
 
     //Relacion uno a uno con methodPayment
     public function methodPayment(){
-        return $this->hasOne('App\Models\MethodPayment');
+        return $this->hasOne(MethodPayment::class);
     }
 }

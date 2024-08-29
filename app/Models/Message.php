@@ -11,11 +11,11 @@ class Message extends Model
 
     //Relacion uno a muchos con patient
     public function patient(){
-        return $this->belongsTo('App\Models\patient');
+        return $this->belongsTo(Patient::class);
     }
 
     //Relacion uno a muchos con chat
     public function chat(){
-        return $this->belongsTo('App\Models\Chat');
+        return $this->belongsTo(Chat::class);
     }
 }

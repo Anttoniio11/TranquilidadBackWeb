@@ -11,6 +11,6 @@ class Profession extends Model
 
     //Relacion muchos a muchos con professional
     public function professional(){
-        return $this->belongsToMany('App\Models\Professional');
+        return $this->belongsToMany(Professional::class);
     }
 }
