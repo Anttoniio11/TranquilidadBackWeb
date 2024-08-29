@@ -11,6 +11,18 @@ class Review extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['',]; //Campos que se van a asignacion masiva:
+   
+   
+    protected $allowIncluded = ['',]; //las posibles Querys que se pueden realizar
+    
+    protected $allowFilter = ['id', '', ''];
+    protected $allowSort = ['id', '', ''];
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+
     //Relacion uno a uno con patient
     public function patient(){
         return $this->belongsTo(Patient::class);
@@ -20,4 +32,12 @@ class Review extends Model
     public function professional(){
         return $this->belongsTo(Professional::class);
     }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    
+
+
+
+    
 }
