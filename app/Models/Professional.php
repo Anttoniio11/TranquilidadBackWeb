@@ -23,4 +23,9 @@ class Professional extends Model
     public function resource(){
         return $this->hasMany('App\Models\Resource');
     }
+
+    //Relacion uno a uno con review
+    public function review(){
+        return $this->hasOne('App\Models\Review');
+    }
 }

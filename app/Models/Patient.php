@@ -28,4 +28,9 @@ class Patient extends Model
     public function bill(){
         return $this->hasMany('App\Models\Bill');
     }
+
+    //Relacion uno a uno con review
+    public function review(){
+        return $this->hasOne('App\Models\Review');
+    }
 }

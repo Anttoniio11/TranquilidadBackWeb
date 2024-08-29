@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Review extends Model
 {
     use HasFactory;
+
+    //Relacion uno a uno con patient
+    public function patient(){
+        return $this->belongsTo('App\Models\Patient');
+    }
+
+    //Relacion uno a uno con professional
+    public function professional(){
+        return $this->belongsTo('App\Models\Professional');
+    }
 }
