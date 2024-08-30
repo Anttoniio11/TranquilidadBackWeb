@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('file_path');  // Para almacenar la ruta del archivo de audio
-            $table->integer('duration')->comment('Duration in seconds');
+            $table->integer('duration')->comment('minutes');
             $table->foreignId('genre_id')->constrained('genres')->onDelete('cascade');
             $table->foreignId('album_id')->nullable()->constrained('albums')->onDelete('cascade');
             $table->foreignId('binaural_sound_id')->nullable()->constrained('binaural_sounds')->onDelete('cascade');

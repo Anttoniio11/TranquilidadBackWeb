@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\ApiTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Playlist extends Model
 {
-    use HasFactory;
+    use HasFactory, ApiTrait;
 
-    protected $table = 'playlists'; // Define el nombre de la tabla
-    protected $guarded = []; // Permite la asignación masiva para todos los campos
+    protected $table = 'playlists'; 
+    protected $guarded = []; 
 
     // Listas Blancas para incluir relaciones, filtrar y ordenar
 
@@ -27,13 +28,14 @@ class Playlist extends Model
         return $this->belongsTo(User::class);
     }
 
-    //muchos a muchos 
 
+    // Relación de muchos a muchos
     public function audios()
     {
         return $this->belongsToMany(Audio::class, 'audio_playlist');
     }
 
+    // Relación de muchos a muchos
     public function podcasts()
     {
         return $this->belongsToMany(Podcast::class, 'playlist_podcast');

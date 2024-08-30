@@ -58,3 +58,9 @@ Route::apiResource('likes', LikeController::class);
 
 // Rutas para History
 Route::apiResource('histories', HistoryController::class);
+
+
+//////////////////////////////////////////////
+
+Route::delete('/playlists/{playlist}/audios/{audio}', [PlaylistController::class, 'removeAudio']);
+Route::delete('/playlists/{playlist}/podcasts/{podcast}', [PlaylistController::class, 'removePodcast']);
