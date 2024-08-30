@@ -20,9 +20,7 @@ class GenreController extends Controller
         $genres = Genre::included()
                 ->filter()
                 ->sort()
-                ->getOrPaginate()
-                ;
-                        
+                ->getOrPaginate();
 
         return response()->json($genres);
     }

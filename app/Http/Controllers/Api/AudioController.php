@@ -15,8 +15,7 @@ class AudioController extends Controller
         $audios = Audio::included()
                 ->filter()
                 ->sort()
-                ->getOrPaginate()
-                ;
+                ->getOrPaginate();
                         
 
         return response()->json($audios);

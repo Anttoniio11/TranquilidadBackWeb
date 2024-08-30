@@ -13,16 +13,7 @@ use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\HistoryController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -60,7 +51,7 @@ Route::apiResource('likes', LikeController::class);
 Route::apiResource('histories', HistoryController::class);
 
 
-//////////////////////////////////////////////
 
+// RUTAS PARA ELIMINAR REGISTROS DE LA RELACION DE PLAYLIST
 Route::delete('/playlists/{playlist}/audios/{audio}', [PlaylistController::class, 'removeAudio']);
 Route::delete('/playlists/{playlist}/podcasts/{podcast}', [PlaylistController::class, 'removePodcast']);

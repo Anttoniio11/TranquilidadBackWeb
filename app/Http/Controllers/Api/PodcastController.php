@@ -3,47 +3,70 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Podcast;
 use Illuminate\Http\Request;
 
 class PodcastController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
-        //
+        $podcast = Podcast::included()
+                ->filter()
+                ->sort()
+                ->getOrPaginate();
+        return response()->json($podcast);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+  
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'file_path' => 'required|string|max:255',
+            'duration' => 'required|integer',
+        ]);
+
+        // Crear el nuevo podcast
+        $podcast = Podcast::create($request->all());
+
+        return response()->json($podcast, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $podcast = Podcast::included()->findOrFail($id);
+        return $podcast;
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    
+    public function update(Request $request, Podcast $podcast)
     {
-        //
+        $request->validate([
+            
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'file_path' => 'required|string|max:255',
+            'duration' => 'required|integer',
+        ]);
+
+        $podcast->update($request->all());
+        return response()->json($podcast);
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Podcast $podcast)
+
     {
-        //
+        $podcast->delete();
+        return response()->json($podcast);
     }
 }

@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\ApiTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Podcast extends Model
 {
-    use HasFactory;
+    use HasFactory,ApiTrait;
 
     // Relación polimórfica con el modelo Tag
     public function tags()
