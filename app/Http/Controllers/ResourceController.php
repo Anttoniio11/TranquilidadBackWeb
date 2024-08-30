@@ -13,10 +13,10 @@ class ResourceController extends Controller
     public function index(Request $request)
     {
         $resources = Resource::query()
-            ->included()  // Aplicar relación incluida
-            ->filter()     // Aplicar filtros
-            ->sort()       // Aplicar ordenamiento
-            ->getOrPaginate(); // Obtener o paginar resultados
+            ->included()
+            ->filter()
+            ->sort()
+            ->getOrPaginate();
         
         return response()->json($resources);
     }

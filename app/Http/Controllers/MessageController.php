@@ -13,10 +13,10 @@ class MessageController extends Controller
     public function index(Request $request)
     {
         $messages = Message::query()
-            ->included()  // Aplicar relación incluida
-            ->filter()     // Aplicar filtros
-            ->sort()       // Aplicar ordenamiento
-            ->getOrPaginate(); // Obtener o paginar resultados
+            ->included()
+            ->filter()
+            ->sort()
+            ->getOrPaginate();
         
         return response()->json($messages);
     }

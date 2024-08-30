@@ -13,10 +13,10 @@ class AppointmentController extends Controller
     public function index(Request $request)
     {
         $appointments = Appointment::query()
-            ->included()  // Aplicar relación incluida
-            ->filter()     // Aplicar filtros
-            ->sort()       // Aplicar ordenamiento
-            ->getOrPaginate(); // Obtener o paginar resultados
+            ->included()
+            ->filter()
+            ->sort()
+            ->getOrPaginate();
         
         return response()->json($appointments);
     }
