@@ -26,6 +26,8 @@ class AudioController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'es_binaural' => 'required|boolean', 
+            'frecuencia' => 'required_if:es_binaural,true|nullable|numeric', // Requerido solo si es binaural
             'duration' => 'required|integer|min:1',
             'binaural_sound_id' => 'nullable|exists:binaural_sounds,id',
             'album_id' => 'nullable|exists:albums,id',
@@ -52,6 +54,8 @@ class AudioController extends Controller
     {
         $request->validate([
             'title' => 'sometimes|required|string|max:255',
+            'es_binaural' => 'sometimes|required|boolean', 
+            'frecuencia' => 'required_if:es_binaural,true|nullable|numeric', // Requerido solo si es binaural
             'duration' => 'sometimes|required|integer|min:1',
             'binaural_sound_id' => 'sometimes|required|exists:binaural_sounds,id',
             'album_id' => 'nullable|exists:albums,id',

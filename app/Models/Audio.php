@@ -16,7 +16,7 @@ class Audio extends Model
 
     //Listas Blancas
     protected $allowIncluded = ['genre', 'album', 'playlists', 'tags', 'likes', 'histories'];
-    protected $allowFilter = ['id', 'title', 'duration'];
+    protected $allowFilter = ['id', 'title','es_binaural', 'duration'];
     protected $allowSort = ['id', 'title'];
 
 
@@ -34,11 +34,7 @@ class Audio extends Model
         return $this->belongsTo(Album::class);
     }
 
-    // Relación  Uno a Muchos Inversa
-    public function binauralSound()
-    {
-        return $this->belongsTo(BinauralSound::class);
-    }
+   
 
     // Relación Muchos a Muchos polimórfica con el modelo Tag
     public function tags()

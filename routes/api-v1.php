@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\AudioController;
 use App\Http\Controllers\Api\PodcastController;
 use App\Http\Controllers\Api\PlaylistController;
 use App\Http\Controllers\Api\GenreController;
-use App\Http\Controllers\Api\BinauralSoundController;
+
 use App\Http\Controllers\Api\AlbumController;
 use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\LikeController;
@@ -35,8 +35,7 @@ Route::apiResource('playlists', PlaylistController::class);
 // Rutas para Genre
 Route::apiResource('genres', GenreController::class);
 
-// Rutas para BinauralSound
-Route::apiResource('binaural-sounds', BinauralSoundController::class);
+
 
 // Rutas para Album
 Route::apiResource('albums', AlbumController::class);

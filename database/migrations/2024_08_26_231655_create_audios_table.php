@@ -20,7 +20,9 @@ return new class extends Migration
             $table->integer('duration')->comment('minutes');
             $table->foreignId('genre_id')->constrained('genres')->onDelete('cascade');
             $table->foreignId('album_id')->nullable()->constrained('albums')->onDelete('cascade');
-            $table->foreignId('binaural_sound_id')->nullable()->constrained('binaural_sounds')->onDelete('cascade');
+            
+            $table->boolean('es_binaural')->default(false); // Indica si es un sonido binaural
+            $table->float('frecuencia')->nullable(); // Frecuencia específica para sonidos binaurales
             
             $table->timestamps();
         });
