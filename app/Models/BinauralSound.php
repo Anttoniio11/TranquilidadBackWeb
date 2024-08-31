@@ -12,6 +12,11 @@ class BinauralSound extends Model
 
     protected $guarded =[];
 
+    //Listas Blancas
+    protected $allowIncluded= ['audios'];
+    protected $allowFilter= ['id','name','description','frequency'];
+    protected $allowSort= ['id','name','frequency'];
+
     // Relación de uno a muchos con el modelo Audio
     public function audios()
     {

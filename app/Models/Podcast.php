@@ -10,13 +10,21 @@ class Podcast extends Model
 {
     use HasFactory,ApiTrait;
 
-    // Relación polimórfica con el modelo Tag
+
+    //Listas Blancas
+    protected $allowIncluded = ['tags', 'likes', 'histories', 'playlists'];
+    protected $allowFilter = ['id', 'title','description', 'duration'];
+    protected $allowSort = ['id', 'title','duration'];
+
+
+
+    // Relación polimórfica muchos a muchos con el modelo Tag
     public function tags()
     {
         return $this->morphToMany(Tag::class, 'taggable');
     }
 
-    // Relación polimórfica con el modelo Like
+    // Relación polimórfica inversa con el modelo Like
     public function likes()
     {
         return $this->morphMany(Like::class, 'likeable');

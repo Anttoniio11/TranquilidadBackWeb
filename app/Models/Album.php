@@ -12,6 +12,11 @@ class Album extends Model
 
     protected $guarded = [];
 
+    //Listas Blancas
+    protected $allowIncluded= ['audios'];
+    protected $allowFilter= ['id','title','description'];
+    protected $allowSort= ['id','title'];
+
 
     // Relación de uno a muchos con el modelo Audio
     public function audios()

@@ -11,6 +11,11 @@ class History extends Model
 
     protected $guarded = [];
 
+    //Listas Blancas
+    protected $allowIncluded= ['user'];
+    protected $allowFilter= ['id'];
+    protected $allowSort= ['id'];
+
     // Relación polimórfica inversa
     public function historable()
     {

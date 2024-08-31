@@ -46,7 +46,10 @@ class Audio extends Model
         return $this->morphToMany(Tag::class, 'taggable');
     }
 
-    // Relación Uno a Muchos polimórfica con el modelo Like
+
+
+
+    // Relación Uno a Muchos polimórfica inversa con el modelo Like
     public function likes()
     {
         return $this->morphMany(Like::class, 'likeable');

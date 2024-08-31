@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tags', function (Blueprint $table) {
-            $table->id();
-
-            $table->string('name')->unique(); // Nombre del tag, debe ser único
-
-
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->date('birthdate')->after('email'); // Agregar la columna 'birthdate'
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tags');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('birthdate'); // Eliminar la columna 'birthdate' si se revierte la migración
+        });
     }
 };

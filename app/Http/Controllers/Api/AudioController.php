@@ -27,7 +27,7 @@ class AudioController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'duration' => 'required|integer|min:1',
-            'binaural_sound_id' => 'required|exists:binaural_sounds,id',
+            'binaural_sound_id' => 'nullable|exists:binaural_sounds,id',
             'album_id' => 'nullable|exists:albums,id',
             'genre_id' => 'nullable|exists:genres,id',
             'file_path' => 'required|string',
