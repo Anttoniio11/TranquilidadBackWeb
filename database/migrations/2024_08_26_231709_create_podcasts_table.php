@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('file_path');  // Para almacenar la ruta del archivo de podcast
+            $table->string('file_path')->unique();  // Para almacenar la ruta del archivo de podcast
             $table->integer('duration')->comment('Duration in seconds');
 
 
