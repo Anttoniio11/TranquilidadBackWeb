@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->string('name')->unique();
             $table->text('description')->nullable();
+            $table->string('image_path')->nullable();//Ruta o URL de una imagen o icono que representa el género musical
 
             $table->timestamps();
         });

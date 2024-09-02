@@ -38,7 +38,8 @@ class GenreController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:genres',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'image_path' => 'required|string', // URL o ruta opcional
         ]);
 
         $genre = Genre::create($request->all());
@@ -74,8 +75,9 @@ class GenreController extends Controller
     public function update(Request $request, Genre $genre)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string'
+            'name' => 'sometimes|required|string|max:255|unique:genres,name,' . $genre->id, // Único excepto para el género actual
+            'description' => 'nullable|string',
+            'image_path' => 'nullable|string',
         ]);
 
         

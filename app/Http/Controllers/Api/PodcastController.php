@@ -25,7 +25,8 @@ class PodcastController extends Controller
             
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'file_path' => 'required|string|max:255',
+            'thumbnail_path' => 'nullable|string', // URL o ruta opcional
+            'video_path' => 'required|string|unique:podcasts,video_path', // Obligatorio y único
             'duration' => 'required|integer',
         ]);
 
@@ -49,10 +50,11 @@ class PodcastController extends Controller
     {
         $request->validate([
             
-            'title' => 'required|string|max:255',
+            'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
-            'file_path' => 'required|string|max:255',
-            'duration' => 'required|integer',
+            'thumbnail_path' => 'nullable|string',
+            'video_path' => 'sometimes|required|string|unique:podcasts,video_path,' . $podcast->id, // Único excepto para el podcast actual
+            'duration' => 'sometimes|required|integer',
         ]);
 
         $podcast->update($request->all());

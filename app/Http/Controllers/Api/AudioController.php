@@ -29,10 +29,10 @@ class AudioController extends Controller
             'es_binaural' => 'required|boolean', 
             'frecuencia' => 'required_if:es_binaural,true|nullable|numeric', // Requerido solo si es binaural
             'duration' => 'required|integer|min:1',
-            'binaural_sound_id' => 'nullable|exists:binaural_sounds,id',
+           
             'album_id' => 'nullable|exists:albums,id',
             'genre_id' => 'nullable|exists:genres,id',
-            'file_path' => 'required|string',
+            'file_path' => 'required|string|unique:audios,file_path', // Obligatorio y único
             'description' => 'nullable|string|max:1000',
             
         ]);
@@ -57,7 +57,7 @@ class AudioController extends Controller
             'es_binaural' => 'sometimes|required|boolean', 
             'frecuencia' => 'required_if:es_binaural,true|nullable|numeric', // Requerido solo si es binaural
             'duration' => 'sometimes|required|integer|min:1',
-            'binaural_sound_id' => 'sometimes|required|exists:binaural_sounds,id',
+            
             'album_id' => 'nullable|exists:albums,id',
             'genre_id' => 'nullable|exists:genres,id',
             'file_path' => 'sometimes|required|string',
