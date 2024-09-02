@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('image_path')->nullable();  // Para almacenar la ruta de la imagen de portada
+            $table->string('image_file')->nullable();  
 
             
             $table->timestamps();

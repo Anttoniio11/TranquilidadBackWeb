@@ -25,7 +25,7 @@ class AlbumController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image_path' => 'required|string', // URL o ruta opcional
+            'image_file' => 'required|string', // URL o ruta opcional
            
         ]);
 
@@ -46,7 +46,7 @@ class AlbumController extends Controller
         $request->validate([
             'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
-            'cover_image' => 'nullable|string',
+            'image_file' => 'nullable|string',
             
         ]);
 

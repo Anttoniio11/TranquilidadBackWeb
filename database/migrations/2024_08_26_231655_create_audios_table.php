@@ -16,8 +16,8 @@ return new class extends Migration
 
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('image_path')->nullable(); //Ruta o URL de la imagen asociada al audio, como la portada del álbum
-            $table->string('file_path')->unique();  // Para almacenar la ruta del archivo de audio
+            $table->string('image_file')->nullable(); 
+            $table->string('audio_file')->unique();  
             $table->integer('duration')->comment('seconds');
             $table->foreignId('genre_id')->constrained('genres')->onDelete('cascade');
             $table->foreignId('album_id')->nullable()->constrained('albums')->onDelete('cascade');      
