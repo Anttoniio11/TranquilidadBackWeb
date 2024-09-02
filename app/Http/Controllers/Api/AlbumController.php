@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Album;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AlbumController extends Controller
 {
@@ -31,7 +32,11 @@ class AlbumController extends Controller
         ]);
 
         // Subir la imagen
-        $imageFilePath = $request->file('image_file')->store('images/albums', 'public');
+        $imageFile = $request->file('image_file');
+        $imageName = Str::random(10) . '.' . $imageFile->getClientOriginalExtension(); // Generar un nombre único y corto
+        $imageFilePath = $imageFile->storeAs('images/albums', $imageName, 'public');
+
+        //$imageFilePath = $request->file('image_file')->store('images/albums', 'public');
 
         // Crear el nuevo álbum
         $album = Album::create([
@@ -68,7 +73,9 @@ class AlbumController extends Controller
             }
 
             // Subir la nueva imagen
-            $imageFilePath = $request->file('image_file')->store('images/albums', 'public');
+            $imageFile = $request->file('image_file');
+            $imageName = Str::random(10) . '.' . $imageFile->getClientOriginalExtension(); // Generar un nombre único y corto
+            $imageFilePath = $imageFile->storeAs('images/albums', $imageName, 'public');
             $album->image_path = $imageFilePath;
         }
 

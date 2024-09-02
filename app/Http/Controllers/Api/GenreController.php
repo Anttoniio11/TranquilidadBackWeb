@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Genre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class GenreController extends Controller
 {
@@ -44,7 +45,11 @@ class GenreController extends Controller
         ]);
 
         // Subir la imagen
-        $imageFilePath = $request->file('image_file')->store('images/genres', 'public');
+        $imageFile = $request->file('image_file');
+        $imageName = Str::random(10) . '.' . $imageFile->getClientOriginalExtension();
+        $imageFilePath = $imageFile->storeAs('images/genres', $imageName, 'public');
+
+        //$imageFilePath = $request->file('image_file')->store('images/genres', 'public');
 
         // Crear el nuevo genre
         $genre = Genre::create([
@@ -100,23 +105,23 @@ class GenreController extends Controller
             }
 
             // Subir la nueva imagen
-            $imageFilePath = $request->file('image_file')->store('images/genres', 'public');
+            $imageFile = $request->file('image_file');
+            $imageName = Str::random(10) . '.' . $imageFile->getClientOriginalExtension();
+            $imageFilePath = $imageFile->storeAs('images/genres', $imageName, 'public');
             $genre->image_path = $imageFilePath;
         }
 
-                // Actualizar los otros datos del genero si se proporcionan
-                if ($request->has('name')) {
-                    $genre->title = $request->title;
-                }
-                if ($request->has('description')) {
-                    $genre->description = $request->description;
-                }
-        
-                $genre->save(); // Guardar los cambios
-        
-                return response()->json($genre);
+        // Actualizar los otros datos del genero si se proporcionan
+        if ($request->has('name')) {
+            $genre->name = $request->name;
+        }
+        if ($request->has('description')) {
+            $genre->description = $request->description;
+        }
 
+        $genre->save(); // Guardar los cambios
 
+        return response()->json($genre);
     }
 
 

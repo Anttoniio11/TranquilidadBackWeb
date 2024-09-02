@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Podcast;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PodcastController extends Controller
 {
@@ -34,12 +35,26 @@ class PodcastController extends Controller
 
         // Subir la imagen si se proporciona
         $imageFilePath = null;
+
+
         if ($request->hasFile('image_file')) {
-            $imageFilePath = $request->file('image_file')->store('images/podcasts', 'public');
+
+            $imageFile = $request->file('image_file');
+            $imageName = Str::random(10) . '.' . $imageFile->getClientOriginalExtension(); // Nombre corto y único
+            $imageFilePath = $imageFile->storeAs('images/podcasts', $imageName, 'public');
+
+
+
+            //$imageFilePath = $request->file('image_file')->store('images/podcasts', 'public');
         }
 
         // Subir el archivo de video
-        $videoFilePath = $request->file('video_file')->store('videos/podcasts', 'public');
+        $videoFile = $request->file('video_file');
+        $videoName = Str::random(10) . '.' . $videoFile->getClientOriginalExtension(); // Nombre corto y único
+        $videoFilePath = $videoFile->storeAs('videos/podcasts', $videoName, 'public');
+
+
+        //$videoFilePath = $request->file('video_file')->store('videos/podcasts', 'public');
 
         // Crear el nuevo podcast
         $podcast = Podcast::create([
@@ -73,8 +88,16 @@ class PodcastController extends Controller
                 Storage::disk('public')->delete($podcast->image_file);
             }
 
+
+
             // Subir la nueva imagen
-            $imageFilePath = $request->file('image_file')->store('images/podcasts', 'public');
+
+            $imageFile = $request->file('image_file');
+            $imageName = Str::random(10) . '.' . $imageFile->getClientOriginalExtension();
+            $imageFilePath = $imageFile->storeAs('images/podcasts', $imageName, 'public');
+
+
+            // $imageFilePath = $request->file('image_file')->store('images/podcasts', 'public');
             $podcast->image_file = $imageFilePath;
         }
 
@@ -86,7 +109,11 @@ class PodcastController extends Controller
             }
 
             // Subir el nuevo archivo de video
-            $videoFilePath = $request->file('video_file')->store('videos/podcasts', 'public');
+            $videoFile = $request->file('video_file');
+            $videoName = Str::random(10) . '.' . $videoFile->getClientOriginalExtension();
+            $videoFilePath = $videoFile->storeAs('videos/podcasts', $videoName, 'public');
+
+            //$videoFilePath = $request->file('video_file')->store('videos/podcasts', 'public');
             $podcast->video_file = $videoFilePath;
         }
 
@@ -113,18 +140,18 @@ class PodcastController extends Controller
 
     {
         // Eliminar la imagen del almacenamiento si existe
-    if ($podcast->image_file && Storage::disk('public')->exists($podcast->image_file)) {
-        Storage::disk('public')->delete($podcast->image_file);
-    }
+        if ($podcast->image_file && Storage::disk('public')->exists($podcast->image_file)) {
+            Storage::disk('public')->delete($podcast->image_file);
+        }
 
-    // Eliminar el archivo de video del almacenamiento si existe
-    if ($podcast->video_file && Storage::disk('public')->exists($podcast->video_file)) {
-        Storage::disk('public')->delete($podcast->video_file);
-    }
+        // Eliminar el archivo de video del almacenamiento si existe
+        if ($podcast->video_file && Storage::disk('public')->exists($podcast->video_file)) {
+            Storage::disk('public')->delete($podcast->video_file);
+        }
 
-    // Eliminar el registro del podcast
-    $podcast->delete();
+        // Eliminar el registro del podcast
+        $podcast->delete();
 
-    return response()->json(['message' => 'Podcast eliminado exitosamente'], 200);
+        return response()->json(['message' => 'Podcast eliminado exitosamente'], 200);
     }
 }

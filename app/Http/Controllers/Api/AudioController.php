@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Audio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AudioController extends Controller
 {
@@ -42,11 +43,18 @@ class AudioController extends Controller
         // Manejar la carga del archivo de imagen si está presente
         $imageFilePath = null;
         if ($request->hasFile('image_file')) {
-            $imageFilePath = $request->file('image_file')->store('images/audios', 'public');
+            $imageFile = $request->file('image_file');
+            $imageName = Str::random(10) . '.' . $imageFile->getClientOriginalExtension(); // Generar un nombre único y corto
+            $imageFilePath = $imageFile->storeAs('images/audios', $imageName, 'public');
+            //$imageFilePath = $request->file('image_file')->store('images/audios', 'public');
         }
 
         // Manejar la carga del archivo de audio
-        $audioFilePath = $request->file('audio_file')->store('audios', 'public');
+        $audioFile = $request->file('audio_file');
+        $audioName = Str::random(10) . '.' . $audioFile->getClientOriginalExtension(); // Generar un nombre único y corto
+        $audioFilePath = $audioFile->storeAs('audios', $audioName, 'public');
+
+        //$audioFilePath = $request->file('audio_file')->store('audios', 'public');
 
         // Crear el nuevo registro de audio
         $audio = Audio::create([
@@ -96,7 +104,11 @@ class AudioController extends Controller
             }
 
             // Subir la nueva imagen
-            $imageFilePath = $request->file('image_file')->store('images/audios', 'public');
+            $imageFile = $request->file('image_file');
+            $imageName = Str::random(10) . '.' . $imageFile->getClientOriginalExtension(); // Generar un nombre único y corto
+            $imageFilePath = $imageFile->storeAs('images/audios', $imageName, 'public');
+
+            //$imageFilePath = $request->file('image_file')->store('images/audios', 'public');
             $audio->image_file = $imageFilePath;
         }
 
@@ -108,7 +120,10 @@ class AudioController extends Controller
             }
 
             // Subir el nuevo archivo de audio
-            $audioFilePath = $request->file('audio_file')->store('audios', 'public');
+            $audioFile = $request->file('audio_file');
+            $audioName = Str::random(10) . '.' . $audioFile->getClientOriginalExtension(); // Generar un nombre único y corto
+            $audioFilePath = $audioFile->storeAs('audios', $audioName, 'public');
+            //$audioFilePath = $request->file('audio_file')->store('audios', 'public');
             $audio->audio_file = $audioFilePath;
         }
 
