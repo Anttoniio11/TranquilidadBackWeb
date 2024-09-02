@@ -6,8 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Audio;
 use Illuminate\Http\Request;
-
-
+use Illuminate\Support\Facades\Storage;
 
 class AudioController extends Controller
 {
@@ -27,31 +26,30 @@ class AudioController extends Controller
     // Crear un nuevo audio
     public function store(Request $request)
     {
+        // Validar la solicitud
         $request->validate([
-            
-        'title' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Para aceptar archivos de imagen
-        'audio_file' => 'required|mimes:mp3,wav,aac|max:10000|unique:audios,audio_file', // Para aceptar archivos de audio específicos
-        'duration' => 'required|integer',
-        'genre_id' => 'required|exists:genres,id',
-        'album_id' => 'nullable|exists:albums,id',
-        'es_binaural' => 'required|boolean',
-        'frecuencia' => 'required_if:es_binaural,true|nullable|numeric', // Solo requerida si es_binaural es true
-
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'audio_file' => 'required|mimes:mp3,wav,aac|max:10000|unique:audios,audio_file',
+            'duration' => 'required|integer',
+            'genre_id' => 'required|exists:genres,id',
+            'album_id' => 'nullable|exists:albums,id',
+            'es_binaural' => 'required|boolean',
+            'frecuencia' => 'required_if:es_binaural,true|nullable|numeric',
         ]);
 
-        // Subir la imagen si se proporciona
-        $imageFilePath = $request->file('image_file')
-            ? $request->file('image_file')->store('images/audios', 'public')
-            : null;
+        // Manejar la carga del archivo de imagen si está presente
+        $imageFilePath = null;
+        if ($request->hasFile('image_file')) {
+            $imageFilePath = $request->file('image_file')->store('images/audios', 'public');
+        }
 
-        // Subir el archivo de audio
+        // Manejar la carga del archivo de audio
         $audioFilePath = $request->file('audio_file')->store('audios', 'public');
 
         // Crear el nuevo registro de audio
         $audio = Audio::create([
-            
             'title' => $request->title,
             'description' => $request->description,
             'image_file' => $imageFilePath,
@@ -60,13 +58,8 @@ class AudioController extends Controller
             'genre_id' => $request->genre_id,
             'album_id' => $request->album_id,
             'es_binaural' => $request->es_binaural,
-            'frecuencia' => $request->es_binaural ? $request->frecuencia : null, // Solo guarda la frecuencia si es_binaural es true
+            'frecuencia' => $request->es_binaural ? $request->frecuencia : null,
         ]);
-
-
-
-
-        //$audio = Audio::create($request->all());
 
         return response()->json($audio, 201);
     }
@@ -81,44 +74,44 @@ class AudioController extends Controller
     // Actualizar un audio existente
     public function update(Request $request, Audio $audio)
     {
-        
 
+        // Validar la solicitud
         $request->validate([
             'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'audio_file' => 'sometimes|required|mimes:mp3,wav,aac|max:10000|unique:audios,audio_file,' . $audio->id,
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Para aceptar archivos de imagen
+            'audio_file' => 'nullable|mimes:mp3,wav,aac|max:10000|unique:audios,audio_file,' . $audio->id, // Para aceptar archivos de audio específicos
             'duration' => 'sometimes|required|integer',
             'genre_id' => 'sometimes|required|exists:genres,id',
             'album_id' => 'nullable|exists:albums,id',
             'es_binaural' => 'sometimes|required|boolean',
-            'frecuencia' => 'required_if:es_binaural,true|nullable|numeric',
+            'frecuencia' => 'required_if:es_binaural,true|nullable|numeric', // Solo requerida si es_binaural es true
         ]);
-    
-        // Subir la imagen si se proporciona
+
+        // Subir la nueva imagen si se proporciona
         if ($request->hasFile('image_file')) {
             // Eliminar la imagen anterior si existe
-            if ($audio->image_file) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($audio->image_file);
+            if ($audio->image_file && Storage::disk('public')->exists($audio->image_file)) {
+                Storage::disk('public')->delete($audio->image_file);
             }
-    
+
             // Subir la nueva imagen
             $imageFilePath = $request->file('image_file')->store('images/audios', 'public');
             $audio->image_file = $imageFilePath;
         }
-    
-        // Subir el archivo de audio si se proporciona
+
+        // Subir el nuevo archivo de audio si se proporciona
         if ($request->hasFile('audio_file')) {
             // Eliminar el archivo de audio anterior si existe
-            if ($audio->audio_file) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($audio->audio_file);
+            if ($audio->audio_file && Storage::disk('public')->exists($audio->audio_file)) {
+                Storage::disk('public')->delete($audio->audio_file);
             }
-    
+
             // Subir el nuevo archivo de audio
             $audioFilePath = $request->file('audio_file')->store('audios', 'public');
             $audio->audio_file = $audioFilePath;
         }
-    
+
         // Actualizar los datos del audio
         if ($request->has('title')) {
             $audio->title = $request->title;
@@ -139,13 +132,10 @@ class AudioController extends Controller
             $audio->es_binaural = $request->es_binaural;
             $audio->frecuencia = $request->es_binaural ? $request->frecuencia : null;
         }
-    
-        $audio->save();
-    
-        return response()->json($audio, 200);
 
-       
-        
+        $audio->save(); // Guardar los cambios
+
+        return response()->json($audio, 200);
     }
 
     // Método para eliminar un audio
@@ -153,18 +143,19 @@ class AudioController extends Controller
     {
         $audio = Audio::findOrFail($id); // Buscar el audio por ID o lanzar un error 404
 
-        // Eliminar los archivos asociados (imagen y audio)
-        if ($audio->image_file) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($audio->image_file);
-        }
-        if ($audio->audio_file) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($audio->audio_file);
+        // Eliminar la imagen del almacenamiento si existe
+        if ($audio->image_file && Storage::disk('public')->exists($audio->image_file)) {
+            Storage::disk('public')->delete($audio->image_file);
         }
 
-        $audio->delete(); // Eliminar el registro del audio
+        // Eliminar el archivo de audio del almacenamiento si existe
+        if ($audio->audio_file && Storage::disk('public')->exists($audio->audio_file)) {
+            Storage::disk('public')->delete($audio->audio_file);
+        }
 
-        return response()->json(['message' => 'Audio eliminado exitosamente'], 200); // Responder con un mensaje de éxito
+        // Eliminar el registro del audio
+        $audio->delete();
+
+        return response()->json(['message' => 'Audio eliminado exitosamente'], 200);
     }
-
-    
 }

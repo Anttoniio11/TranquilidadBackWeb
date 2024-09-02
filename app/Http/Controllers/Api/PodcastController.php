@@ -5,61 +5,105 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Podcast;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PodcastController extends Controller
 {
-    
+
     public function index()
     {
         $podcast = Podcast::included()
-                ->filter()
-                ->sort()
-                ->getOrPaginate();
+            ->filter()
+            ->sort()
+            ->getOrPaginate();
         return response()->json($podcast);
     }
 
-  
+
     public function store(Request $request)
     {
+
+        // Validar la solicitud
         $request->validate([
-            
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image_file' => 'nullable|string', // URL o ruta opcional
-            'video_file' => 'required|string|unique:podcasts,video_path', // Obligatorio y único
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Acepta archivos de imagen
+            'video_file' => 'required|mimes:mp4,mov,ogg,qt|max:20000|unique:podcasts,video_file', // Acepta archivos de video específicos
             'duration' => 'required|integer',
         ]);
 
+        // Subir la imagen si se proporciona
+        $imageFilePath = null;
+        if ($request->hasFile('image_file')) {
+            $imageFilePath = $request->file('image_file')->store('images/podcasts', 'public');
+        }
+
+        // Subir el archivo de video
+        $videoFilePath = $request->file('video_file')->store('videos/podcasts', 'public');
+
         // Crear el nuevo podcast
-        $podcast = Podcast::create($request->all());
+        $podcast = Podcast::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'image_file' => $imageFilePath,
+            'video_file' => $videoFilePath,
+            'duration' => $request->duration,
+        ]);
 
         return response()->json($podcast, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        $podcast = Podcast::included()->findOrFail($id);
-        return $podcast;
-    }
 
-    
     public function update(Request $request, Podcast $podcast)
     {
+
+        // Validar la solicitud
         $request->validate([
-            
             'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
-            'thumbnail_path' => 'nullable|string',
-            'video_path' => 'sometimes|required|string|unique:podcasts,video_path,' . $podcast->id, // Único excepto para el podcast actual
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Acepta archivos de imagen
+            'video_file' => 'nullable|mimes:mp4,mov,ogg,qt|max:20000|unique:podcasts,video_file,' . $podcast->id, // Acepta archivos de video específicos
             'duration' => 'sometimes|required|integer',
         ]);
 
-        $podcast->update($request->all());
-        return response()->json($podcast);
+        // Subir la nueva imagen si se proporciona
+        if ($request->hasFile('image_file')) {
+            // Eliminar la imagen anterior si existe
+            if ($podcast->image_file && Storage::disk('public')->exists($podcast->image_file)) {
+                Storage::disk('public')->delete($podcast->image_file);
+            }
 
+            // Subir la nueva imagen
+            $imageFilePath = $request->file('image_file')->store('images/podcasts', 'public');
+            $podcast->image_file = $imageFilePath;
+        }
+
+        // Subir el nuevo archivo de video si se proporciona
+        if ($request->hasFile('video_file')) {
+            // Eliminar el archivo de video anterior si existe
+            if ($podcast->video_file && Storage::disk('public')->exists($podcast->video_file)) {
+                Storage::disk('public')->delete($podcast->video_file);
+            }
+
+            // Subir el nuevo archivo de video
+            $videoFilePath = $request->file('video_file')->store('videos/podcasts', 'public');
+            $podcast->video_file = $videoFilePath;
+        }
+
+        // Actualizar los datos del podcast si se proporcionan
+        if ($request->has('title')) {
+            $podcast->title = $request->title;
+        }
+        if ($request->has('description')) {
+            $podcast->description = $request->description;
+        }
+        if ($request->has('duration')) {
+            $podcast->duration = $request->duration;
+        }
+
+        $podcast->save(); // Guardar los cambios
+
+        return response()->json($podcast, 200);
     }
 
     /**
@@ -68,7 +112,19 @@ class PodcastController extends Controller
     public function destroy(Podcast $podcast)
 
     {
-        $podcast->delete();
-        return response()->json($podcast);
+        // Eliminar la imagen del almacenamiento si existe
+    if ($podcast->image_file && Storage::disk('public')->exists($podcast->image_file)) {
+        Storage::disk('public')->delete($podcast->image_file);
+    }
+
+    // Eliminar el archivo de video del almacenamiento si existe
+    if ($podcast->video_file && Storage::disk('public')->exists($podcast->video_file)) {
+        Storage::disk('public')->delete($podcast->video_file);
+    }
+
+    // Eliminar el registro del podcast
+    $podcast->delete();
+
+    return response()->json(['message' => 'Podcast eliminado exitosamente'], 200);
     }
 }

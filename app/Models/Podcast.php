@@ -10,6 +10,8 @@ class Podcast extends Model
 {
     use HasFactory,ApiTrait;
 
+    protected $guarded= [];
+
 
     //Listas Blancas
     protected $allowIncluded = ['tags', 'likes', 'histories', 'playlists'];

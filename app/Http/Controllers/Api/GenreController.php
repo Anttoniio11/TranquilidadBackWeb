@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Genre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class GenreController extends Controller
 {
@@ -18,9 +19,9 @@ class GenreController extends Controller
     public function index()
     {
         $genres = Genre::included()
-                ->filter()
-                ->sort()
-                ->getOrPaginate();
+            ->filter()
+            ->sort()
+            ->getOrPaginate();
 
         return response()->json($genres);
     }
@@ -39,10 +40,21 @@ class GenreController extends Controller
         $request->validate([
             'name' => 'required|string|max:255|unique:genres',
             'description' => 'nullable|string',
-            'image_file' => 'required|string', 
+            'image_file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $genre = Genre::create($request->all());
+        // Subir la imagen
+        $imageFilePath = $request->file('image_file')->store('images/genres', 'public');
+
+        // Crear el nuevo genre
+        $genre = Genre::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'image_path' => $imageFilePath, // Almacenar la ruta de la imagen
+        ]);
+
+
+        //$genre = Genre::create($request->all());  //sin PNG
         return response()->json($genre, 201);
     }
 
@@ -77,12 +89,34 @@ class GenreController extends Controller
         $request->validate([
             'name' => 'sometimes|required|string|max:255|unique:genres,name,' . $genre->id, // Único excepto para el género actual
             'description' => 'nullable|string',
-            'image_file' => 'nullable|string',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Subir la nueva imagen si se proporciona
+        if ($request->hasFile('image_file')) {
+            // Eliminar la imagen anterior si existe
+            if ($genre->image_path && Storage::disk('public')->exists($genre->image_path)) {
+                Storage::disk('public')->delete($genre->image_path);
+            }
+
+            // Subir la nueva imagen
+            $imageFilePath = $request->file('image_file')->store('images/genres', 'public');
+            $genre->image_path = $imageFilePath;
+        }
+
+                // Actualizar los otros datos del genero si se proporcionan
+                if ($request->has('name')) {
+                    $genre->title = $request->title;
+                }
+                if ($request->has('description')) {
+                    $genre->description = $request->description;
+                }
         
-        $genre->update($request->all());
-        return response()->json($genre);
+                $genre->save(); // Guardar los cambios
+        
+                return response()->json($genre);
+
+
     }
 
 
@@ -98,8 +132,12 @@ class GenreController extends Controller
     // Eliminar un género
     public function destroy(Genre $genre)
     {
-      
+        // Eliminar la imagen del almacenamiento si existe
+        if ($genre->image_path && Storage::disk('public')->exists($genre->image_path)) {
+            Storage::disk('public')->delete($genre->image_path);
+        }
+
         $genre->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Género eliminado exitosamente']);
     }
 }
