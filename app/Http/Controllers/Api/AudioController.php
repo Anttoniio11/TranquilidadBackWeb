@@ -29,7 +29,7 @@ class AudioController extends Controller
     {
         $request->validate([
             
-            'title' => 'required|string|max:255',
+        'title' => 'required|string|max:255',
         'description' => 'nullable|string',
         'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Para aceptar archivos de imagen
         'audio_file' => 'required|mimes:mp3,wav,aac|max:10000|unique:audios,audio_file', // Para aceptar archivos de audio específicos

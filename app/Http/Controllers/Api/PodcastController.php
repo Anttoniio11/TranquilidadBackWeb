@@ -25,8 +25,8 @@ class PodcastController extends Controller
             
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'thumbnail_path' => 'nullable|string', // URL o ruta opcional
-            'video_path' => 'required|string|unique:podcasts,video_path', // Obligatorio y único
+            'image_file' => 'nullable|string', // URL o ruta opcional
+            'video_file' => 'required|string|unique:podcasts,video_path', // Obligatorio y único
             'duration' => 'required|integer',
         ]);
 

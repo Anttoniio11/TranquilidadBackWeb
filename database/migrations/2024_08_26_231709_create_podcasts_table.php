@@ -16,8 +16,8 @@ return new class extends Migration
 
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('thumbnail_path')->nullable(); //Ruta o URL de la miniatura representativa del episodio del podcast.
-            $table->string('video_path')->unique(); //Ruta o URL del archivo de video del podcast, si es un podcast en video.    
+            $table->string('image_file')->nullable(); 
+            $table->string('video_file')->unique(); 
             $table->integer('duration')->comment('Duration in seconds');
 
 
