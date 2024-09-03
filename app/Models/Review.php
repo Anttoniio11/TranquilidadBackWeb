@@ -20,7 +20,7 @@ class Review extends Model
     ];
 
     // Relaciones permitidas para incluir
-    protected $allowIncluded = ['patient'];  
+    protected $allowIncluded = ['patient', 'professional'];   //professional
 
     // Campos permitidos para filtrado
     protected $allowFilter = ['id', 'fecha', 'comentario', 'calificacion', 'professional_id', 'patient_id'];
@@ -47,11 +47,16 @@ class Review extends Model
     // Scope para incluir relaciones
     public function scopeIncluded(Builder $query)
     {
+        
+
         if (empty($this->allowIncluded) || empty(request('included'))) { // validamos que la lista blanca y la variable included enviada a travez de HTTP no este en vacia.
             return;
         }
 
         $relations = explode(',', request('included'));  
+        
+        // return $relations;
+        
         $allowIncluded = collect($this->allowIncluded);
 
         foreach ($relations as $key => $relationship) { //recorremos el array de relaciones
@@ -59,6 +64,7 @@ class Review extends Model
                 unset($relations[$key]);
             }
         }
+
         $query->with($relations);  //se ejecuta el query con lo que tiene $relations en ultimas es el valor en la url de included
 
     }

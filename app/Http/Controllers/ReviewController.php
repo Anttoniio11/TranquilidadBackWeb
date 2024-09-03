@@ -13,11 +13,12 @@ class ReviewController extends Controller
     public function index(Request $request)
     {
         // $categories=Category::all();
-       $review = Review::with(['patient'])->get();
+    //    $review = Review::with(['patient', 'professional'])->get();
+       $reviews=Review::included()->get();
        //$categories=Category::included()->filter();
        //$categories=Category::included()->filter()->sort()->get();
        //$categories=Category::included()->filter()->sort()->getOrPaginate();
-       return ($review);
+       return response()->json($reviews);
 
         // $reviews = Review::query()
         //     ->included()->get();
