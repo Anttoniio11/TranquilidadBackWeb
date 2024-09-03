@@ -12,13 +12,20 @@ class ReviewController extends Controller
     // Mostrar todas las reseñas
     public function index(Request $request)
     {
-        $reviews = Review::query()
-            ->included()
-            ->filter()
-            ->sort()
-            ->getOrPaginate();
+        // $categories=Category::all();
+       $review = Review::with(['patient'])->get();
+       //$categories=Category::included()->filter();
+       //$categories=Category::included()->filter()->sort()->get();
+       //$categories=Category::included()->filter()->sort()->getOrPaginate();
+       return ($review);
+
+        // $reviews = Review::query()
+        //     ->included()->get();
+        //     // ->filter()
+        //     // ->sort()
+        //     // ->getOrPaginate();
         
-        return response()->json($reviews);
+        // return response()->json($reviews);
     }
 
     // Mostrar una reseña específica

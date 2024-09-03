@@ -20,7 +20,7 @@ class Review extends Model
     ];
 
     // Relaciones permitidas para incluir
-    protected $allowIncluded = ['patient', 'professional'];
+    protected $allowIncluded = ['patient'];  
 
     // Campos permitidos para filtrado
     protected $allowFilter = ['id', 'fecha', 'comentario', 'calificacion', 'professional_id', 'patient_id'];
