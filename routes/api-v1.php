@@ -2,17 +2,17 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\PatientController;
-use App\Http\Controllers\Api\V1\ProfessionalController;
-use App\Http\Controllers\Api\V1\ProfessionController;
-use App\Http\Controllers\Api\V1\AppointmentController;
-use App\Http\Controllers\Api\V1\ReviewController;
-use App\Http\Controllers\Api\V1\BillController;
-use App\Http\Controllers\Api\V1\BankController;
-use App\Http\Controllers\Api\V1\MethodPaymentController;
-use App\Http\Controllers\Api\V1\ResourceController;
-use App\Http\Controllers\Api\V1\MessageController;
-use App\Http\Controllers\Api\V1\ChatController;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\ProfessionalController;
+use App\Http\Controllers\ProfessionController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\BillController;
+use App\Http\Controllers\BankController;
+use App\Http\Controllers\MethodPaymentController;
+use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ChatController;
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request){

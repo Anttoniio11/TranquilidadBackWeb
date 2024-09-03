@@ -16,8 +16,8 @@ return new class extends Migration
 
             $table->string('nombre');
             $table->dateTime('descripcion');
-            $table->dateTime('nombre');
-            $table->string('descripcion');
+            $table->dateTime('fecha');
+            // $table->string('descripcion');
 
             $table->unsignedBigInteger('patient_id');
             $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');

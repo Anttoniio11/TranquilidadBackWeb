@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -40,7 +39,7 @@ class PatientController extends Controller
             'nombre' => 'required|string',
             'apellido' => 'required|string',
             'edad' => 'required|string',
-            'correo' => 'required|email',
+            'correo' => 'required|string',
             'telefono' => 'required|string',
             'departamento' => 'required|string',
             'municipio' => 'required|string',
@@ -49,7 +48,7 @@ class PatientController extends Controller
 
         $patient = Patient::create($request->all());
 
-        return response()->json($patient, Response::HTTP_CREATED);
+        return response()->json($patient);
     }
 
     // Actualizar un paciente existente
