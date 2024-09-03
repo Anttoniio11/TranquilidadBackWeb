@@ -11,8 +11,8 @@ class CategoriaController extends Controller
     public function index()
     {
         //$categories=Categoria::all();
-        $categories = Categoria::included()->get();
-        //$categories=Categoria::included()->filter();
+        //$categories = Categoria::included()->get();
+        $categories = Categoria::filter()->included()->get();
         //$categories=Categoria::included()->filter()->sort()->get();
         //$categories=Categoria::included()->filter()->sort()->getOrPaginate();
         return response()->json($categories);

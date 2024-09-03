@@ -11,7 +11,7 @@ class Categoria extends Model
     use HasFactory;
 
     protected $fillable = ['nombre_categoria'];
-    protected $allowIncluded = ['plantilla', 'plantilla.pintura'];
+    protected $allowIncluded = ['plantilla', 'plantilla.pintura','plantilla.pintura.user'];
 
 
     public function plantilla(){
@@ -42,4 +42,27 @@ class Categoria extends Model
 
         //http://api.codersfree1.test/v1/categories?included=posts
     }    
+
+    public function scopeFilter(Builder $query)
+    {
+        
+        if (empty($this->allowFilter) || empty(request('filter'))) {
+            return;
+        }
+
+        $filters = request('filter');
+        $allowFilter = collect($this->allowFilter);
+
+        foreach ($filters as $filter => $value) {
+
+            if ($allowFilter->contains($filter)) {
+
+                $query->where($filter, 'LIKE', '%' . $value . '%');//nos retorna todos los registros que conincidad, asi sea en una porcion del texto
+            }
+        }
+
+        //http://api.codersfree1.test/v1/categories?filter[name]=depo
+        //http://api.codersfree1.test/v1/categories?filter[name]=posts&filter[id]=2
+
+    }
 }

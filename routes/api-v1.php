@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PincelController;
 use App\Http\Controllers\Api\PinturaController;
 use App\Http\Controllers\Api\PlantillaController;
+use App\Http\Controllers\Api\PublicacionController;
 use App\Models\Plantilla;
 
 /*
@@ -33,6 +34,7 @@ Route::controller(UserController::class)->group(function(){
     Route::delete('users/{user}', 'destroy')->name('api.v1.users.delete');
 });
 */
+/*
 Route::get('pincels', [PincelController::class,'index'])->name('api.v1.pincels.index');
 Route::post('pincels', [PincelController::class,'store'])->name('api.v1.pincels.store');
 
@@ -66,4 +68,26 @@ Route::controller(PinturaController::class)->group(function(){
     Route::put('paints/{paint}', 'update')->name('api.v1.paints.update');
     Route::get('paints/{paint}', 'show')->name('api.v1.paints.show');
     Route::delete('paints/{paint}', 'destroy')->name('api.v1.paints.delete');
+});
+
+Route::controller(CompartidoController::class)->group(function(){
+    Route::post('shared', 'store')->name('api.v1.shared.store');
+    Route::get('shared', 'index')->name('api.v1.shared.index');
+    Route::put('shared/{shared}', 'update')->name('api.v1.shared.update');
+    Route::get('shared/{shared}', 'show')->name('api.v1.shared.show');
+    Route::delete('shared/{shared}', 'destroy')->name('api.v1.shared.delete');
+});
+
+Route::controller(PlantillaController::class)->group(function(){
+    Route::post('templates', 'store')->name('api.v1.templates.store');
+    Route::get('templates', 'index')->name('api.v1.templates.index');
+    Route::put('templates/{templates}', 'update')->name('api.v1.templates.update');
+    Route::get('templates/{templates}', 'show')->name('api.v1.templates.show');
+    Route::delete('templates/{templates}', 'destroy')->name('api.v1.templates.delete');
+});
+*/
+
+Route::prefix('api/v1')->group(function(){
+
+    Route::apiResource('publicaciones', PublicacionController::class);
 });

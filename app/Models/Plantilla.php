@@ -11,7 +11,7 @@ class Plantilla extends Model
     use HasFactory;
 
     protected $fillable = ['categoria_id', 'nombre_plantilla', 'contenido_plantilla',];
-    protected $allowIncluded=['pintura'];
+    protected $allowIncluded=['pintura','pintura.user'];
 
     public function categoria(){
         return $this->belongsTo(Categoria::class);

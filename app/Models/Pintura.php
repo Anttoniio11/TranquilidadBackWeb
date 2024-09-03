@@ -10,7 +10,7 @@ class Pintura extends Model
 {
     use HasFactory;
 
-    protected $fillable=['user_id','nombre_pintura','contenido_dibujo','carpeta_id','plantilla_id'];
+    protected $fillable=['user_id','nombre_pintura','contenido_pintura','carpeta_id','plantilla_id'];
     protected $allowIncluded =['user','carpeta'];
 
     public function user(){
