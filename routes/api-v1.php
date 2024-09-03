@@ -54,13 +54,13 @@ Route::controller(CompartidoController::class)->group(function(){
     Route::delete('shared/{shared}', 'destroy')->name('api.v1.shared.delete');
 });
 
-Route::controller(PlantillaController::class)->group(function(){
+/* Route::controller(PlantillaController::class)->group(function(){
     Route::post('templates', 'store')->name('api.v1.templates.store');
     Route::get('templates', 'index')->name('api.v1.templates.index');
     Route::put('templates/{templates}', 'update')->name('api.v1.templates.update');
     Route::get('templates/{templates}', 'show')->name('api.v1.templates.show');
     Route::delete('templates/{templates}', 'destroy')->name('api.v1.templates.delete');
-});
+}); */
 
 Route::controller(PinturaController::class)->group(function(){
     Route::post('paints', 'store')->name('api.v1.paints.store');

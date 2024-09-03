@@ -9,6 +9,13 @@ class Publicacion extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'descripcion_publicacion',
+        'contenido_publicacion',
+        'num_reacciones',
+        'num_compartidos',
+    ];
 
     public function user(){
         return $this->belongsTo(User::class);
