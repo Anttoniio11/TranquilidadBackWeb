@@ -25,8 +25,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request){
 |==========================================================================|
 */
 
-Route::prefix('v1')->group(function () {
-
     //Rutas para Patient
     Route::get('patients', [PatientController::class, 'index'])->name('api.v1.patients.index');
     Route::post('patients', [PatientController::class, 'store'])->name('api.v1.patients.store');
@@ -103,5 +101,3 @@ Route::prefix('v1')->group(function () {
     Route::get('chats/{id}', [ChatController::class, 'show'])->name('api.v1.chats.show');
     Route::put('chats/{id}', [ChatController::class, 'update'])->name('api.v1.chats.update');
     Route::delete('chats/{id}', [ChatController::class, 'destroy'])->name('api.v1.chats.destroy');
-
-});
