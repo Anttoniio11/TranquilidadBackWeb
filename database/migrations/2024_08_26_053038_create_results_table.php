@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('results', function (Blueprint $table) {
             $table->id();
             $table->timestamp('evaluationDate');
+            $table->integer('resultados');
 
             //foreign of questionnaire
             $table->unsignedBigInteger('questionnaire_id');

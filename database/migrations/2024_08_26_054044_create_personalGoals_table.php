@@ -14,6 +14,11 @@ return new class extends Migration
         Schema::create('personalGoals', function (Blueprint $table) {
             $table->id();
 
+            $table->string('descripcionMeta');
+            
+            //foreign of healthPlan 
+            $table->unsignedBigInteger('healthPlan_id');
+            $table->foreign('healthPlan_id')->references('id')->on('health_plans')->onDelete('cascade');
             //foreign of registration
             $table->unsignedBigInteger('processLog_id');
             $table->foreign('processLog_id')->references('id')->on('processLogs')->onDelete('cascade');

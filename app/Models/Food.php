@@ -4,8 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\Api\ApiAlimentacion\FoodController;
 
-class ProccesLog extends Model
+class Food extends Model
 {
     use HasFactory;
+
+    
+
 }
