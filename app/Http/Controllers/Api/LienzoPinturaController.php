@@ -27,7 +27,8 @@ class LienzoPinturaController extends Controller
     {
 
         $request->validate([
-           
+            'herramienta_color_id'=> 'required|exists:herramienta_colors,id',
+           'pintura_id'=>'required|exists:pinturas_id'
         ]);
 
         $canvas = LienzoPintura::create($request->all());
@@ -58,7 +59,8 @@ class LienzoPinturaController extends Controller
     public function update(Request $request, LienzoPintura $canvas)
     {
         $request->validate([
-           
+           'herramienta_color_id'=> 'required|exists:herramienta_colors,id',
+           'pintura_id'=>'required|exists:pinturas_id'
         ]);
 
         $canvas->update($request->all());

@@ -27,6 +27,8 @@ class ReaccionController extends Controller
     {
 
         $request->validate([
+            'user_id'=> 'required|exists:users,id',
+            'reaccion_id'=> 'required|exists:reaccions,id',
             'tipo_reaccion' => 'required|max:255',
             
             
@@ -61,7 +63,9 @@ class ReaccionController extends Controller
     public function update(Request $request, Reaccion $reaction)
     {
         $request->validate([
-           'tipo_reaccion' => 'required|max:255',
+            'user_id'=> 'required|exists:users,id',
+            'reaccion_id'=> 'required|exists:reaccions,id',
+            'tipo_reaccion' => 'required|max:255',
             
         ]);
 

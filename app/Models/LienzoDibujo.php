@@ -9,6 +9,8 @@ class LienzoDibujo extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['pincel_id',    'forma_id',  'herramienta_color_id',  'dibujo_id'];
+
     public function pincel(){
         return $this->belongsTo(Pincel::class);
     }   

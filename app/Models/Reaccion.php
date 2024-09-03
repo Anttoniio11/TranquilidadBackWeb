@@ -9,6 +9,8 @@ class Reaccion extends Model
 {
     use HasFactory;
 
+    protected $fillable=['user_id','publicacion_id','tipo_reaccion'];
+
     public function user(){
         return $this->belongsTo(User::class);
     }

@@ -9,7 +9,7 @@ class Carpeta extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre_carpeta'];
+    protected $fillable = ['user_id', 'nombre_carpeta'];
 
     public function user(){
         return $this->belongsTo(User::class);

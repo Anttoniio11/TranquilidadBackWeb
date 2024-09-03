@@ -27,8 +27,11 @@ class PinturaController extends Controller
     {
 
         $request->validate([
+            'user_id'=> 'required|exists:users,id',
             'nombre_Pintura' => 'required|max:255',
             'contenido_pintura' => 'required|max:255',
+            'carpeta_id'=> 'required|exists:carpetas,id',
+            'plantilla_id'=> 'required|exists:plantillas,id'
           
         ]);
 
@@ -60,8 +63,11 @@ class PinturaController extends Controller
     public function update(Request $request, Pintura $paint)
     {
         $request->validate([
-           'nombre_Pintura' => 'required|max:255',
+            'user_id'=> 'required|exists:users,id',
+            'nombre_Pintura' => 'required|max:255',
             'contenido_pintura' => 'required|max:255',
+            'carpeta_id'=> 'required|exists:carpetas,id',
+            'plantilla_id'=> 'required|exists:plantillas,id'
         ]);
 
         $paint->update($request->all());

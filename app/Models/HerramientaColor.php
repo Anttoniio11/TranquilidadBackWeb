@@ -9,6 +9,8 @@ class HerramientaColor extends Model
 {
     use HasFactory;
 
+    protected $fillable=['relleno','color'];
+
     public function lienzo_pinturas(){
         return $this->hasMany(LienzoPintura::class);
     }

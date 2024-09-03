@@ -28,8 +28,10 @@ class DibujoController extends Controller
     {
 
         $request->validate([
+            'user_id'=> 'required|exists:users,id',
             'nombre_dibujo' => 'required|max:255',
             'contenido_dibujo' => 'required|max:255',
+            'carpeta_id'=> 'required|exists:carpetas,id',
 
         ]);
 
@@ -62,8 +64,10 @@ class DibujoController extends Controller
     public function update(Request $request, Dibujo $drawing)
     {
         $request->validate([
+            'user_id'=> 'required|exists:users,id',
             'nombre_dibujo' => 'required|max:255',
-            'contenido_dibujo' => 'required|max:255' . $drawing->id,
+            'contenido_dibujo' => 'required|max:255',
+            'carpeta_id'=> 'required|exists:carpetas,id',
 
         ]);
 

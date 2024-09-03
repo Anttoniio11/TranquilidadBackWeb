@@ -61,8 +61,8 @@ class CompartidoController extends Controller
     public function update(Request $request,Compartido $shared)
     {
         $request->validate([
-            'user_id'=> 'required|exists:users,id',
-            'publicacion_id'=> 'required|exists:publicaciones,id',
+            'user_id'=> 'required|exists:user,id',
+            'publicacion_id'=> 'required|exists:publicacion,id',
             'red_social' => 'required|max:255'
 
         ]);

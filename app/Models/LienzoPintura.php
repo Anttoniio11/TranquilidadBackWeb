@@ -9,6 +9,8 @@ class LienzoPintura extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['herramienta_color_id','pintura_id'];
+
     public function pintura(){
         return $this->belongsTo(Pintura::class);
     }

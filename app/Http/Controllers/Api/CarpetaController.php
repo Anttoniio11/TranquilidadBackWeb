@@ -10,8 +10,8 @@ class CarpetaController extends Controller
 {
     public function index()
     {
-        $folders=Carpeta::all();
-        //$folders = Carpeta::included()->get();
+        //$folders=Carpeta::all();
+        $folders = Carpeta::included()->get();
         //$folders=Carpeta::included()->filter();
         //$folders=Carpeta::included()->filter()->sort()->get();
         //$folders=Carpeta::included()->filter()->sort()->getOrPaginate();
@@ -28,8 +28,8 @@ class CarpetaController extends Controller
     {
 
         $request->validate([
+            'user_id'=> 'required|exists:users,id',
             'nombre_carpeta' => 'required|max:255',
-           
 
         ]);
 

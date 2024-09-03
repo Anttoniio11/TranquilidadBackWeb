@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Forma extends Model
 {
     use HasFactory;
+    
+    protected $fillable = ['tipo_forma','x','y','ancho','alto'];
 
     public function lienzo_dibujos(){
         return $this->hasMany(LienzoDibujo::class);
