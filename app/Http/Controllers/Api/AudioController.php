@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Audio;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class AudioController extends Controller
@@ -27,6 +29,7 @@ class AudioController extends Controller
     // Crear un nuevo audio
     public function store(Request $request)
     {
+
         // Validar la solicitud
         $request->validate([
             'title' => 'required|string|max:255',
@@ -40,21 +43,51 @@ class AudioController extends Controller
             'frecuencia' => 'required_if:es_binaural,true|nullable|numeric',
         ]);
 
-        // Manejar la carga del archivo de imagen si está presente
         $imageFilePath = null;
+
+        // Manejar la carga del archivo de imagen si está presente
         if ($request->hasFile('image_file')) {
             $imageFile = $request->file('image_file');
-            $imageName = Str::random(10) . '.' . $imageFile->getClientOriginalExtension(); // Generar un nombre único y corto
-            $imageFilePath = $imageFile->storeAs('images/audios', $imageName, 'public');
-            //$imageFilePath = $request->file('image_file')->store('images/audios', 'public');
+
+            // Verificar el tipo y estado del archivo
+            if ($imageFile->isValid()) {
+                try {
+                    $uploadedImage = Cloudinary::upload($imageFile->getRealPath(), [
+                        'folder' => 'images',
+                        'public_id' => Str::random(10)
+                    ]);
+                    $imageFilePath = $uploadedImage->getSecurePath(); // Obtener la URL segura de la imagen
+                } catch (\Exception $e) {
+                    return response()->json(['error' => 'Failed to upload image to Cloudinary: ' . $e->getMessage()], 400);
+                }
+            } else {
+                return response()->json(['error' => 'Invalid image file or file not valid'], 400);
+            }
         }
 
-        // Manejar la carga del archivo de audio
-        $audioFile = $request->file('audio_file');
-        $audioName = Str::random(10) . '.' . $audioFile->getClientOriginalExtension(); // Generar un nombre único y corto
-        $audioFilePath = $audioFile->storeAs('audios', $audioName, 'public');
+        $audioFilePath = null;
 
-        //$audioFilePath = $request->file('audio_file')->store('audios', 'public');
+        // Manejar la carga del archivo de audio
+        if ($request->hasFile('audio_file')) {
+            $audioFile = $request->file('audio_file');
+
+            // Verificar el tipo y estado del archivo
+            if ($audioFile->isValid()) {
+                try {
+                    // Cambiar a uploadVideo() para cargar correctamente archivos de audio
+                    $uploadedAudio = Cloudinary::upload($audioFile->getRealPath(), [
+                        'resource_type' => 'video',  // Especifica que el tipo de recurso es un video/audio
+                        'folder' => 'audios',
+                        'public_id' => Str::random(10)
+                    ]);
+                    $audioFilePath = $uploadedAudio->getSecurePath();
+                } catch (\Exception $e) {
+                    return response()->json(['error' => 'Failed to upload audio to Cloudinary: ' . $e->getMessage()], 400);
+                }
+            } else {
+                return response()->json(['error' => 'Invalid audio file or file not valid'], 400);
+            }
+        }
 
         // Crear el nuevo registro de audio
         $audio = Audio::create([
@@ -79,98 +112,146 @@ class AudioController extends Controller
         return response()->json($audio);
     }
 
-    // Actualizar un audio existente
-    public function update(Request $request, Audio $audio)
-    {
 
+
+
+
+
+    // Actualizar un audio existente
+    public function update(Request $request,  $id)
+    {
         // Validar la solicitud
         $request->validate([
             'title' => 'sometimes|required|string|max:255',
-            'description' => 'nullable|string',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Para aceptar archivos de imagen
-            'audio_file' => 'nullable|mimes:mp3,wav,aac|max:10000|unique:audios,audio_file,' . $audio->id, // Para aceptar archivos de audio específicos
+            'description' => 'sometimes|nullable|string',
+            'image_file' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'audio_file' => 'sometimes|nullable|mimes:mp3,wav,aac|max:10000|unique:audios,audio_file,' . $id,
             'duration' => 'sometimes|required|integer',
             'genre_id' => 'sometimes|required|exists:genres,id',
-            'album_id' => 'nullable|exists:albums,id',
+            'album_id' => 'sometimes|nullable|exists:albums,id',
             'es_binaural' => 'sometimes|required|boolean',
-            'frecuencia' => 'required_if:es_binaural,true|nullable|numeric', // Solo requerida si es_binaural es true
+            'frecuencia' => 'sometimes|required_if:es_binaural,true|nullable|numeric',
         ]);
 
-        // Subir la nueva imagen si se proporciona
+        // Encontrar el registro existente
+        $audio = Audio::findOrFail($id);
+
+        $imageFilePath = $audio->image_file;
+        $audioFilePath = $audio->audio_file;
+
+        // Manejar la carga del nuevo archivo de imagen si está presente
         if ($request->hasFile('image_file')) {
-            // Eliminar la imagen anterior si existe
-            if ($audio->image_file && Storage::disk('public')->exists($audio->image_file)) {
-                Storage::disk('public')->delete($audio->image_file);
+            // Eliminar la imagen anterior de Cloudinary si existe
+            if ($imageFilePath) {
+                $publicId = basename($imageFilePath, '.' . pathinfo($imageFilePath, PATHINFO_EXTENSION));
+                Cloudinary::destroy('images/' . $publicId);
             }
 
-            // Subir la nueva imagen
+
+
             $imageFile = $request->file('image_file');
-            $imageName = Str::random(10) . '.' . $imageFile->getClientOriginalExtension(); // Generar un nombre único y corto
-            $imageFilePath = $imageFile->storeAs('images/audios', $imageName, 'public');
-
-            //$imageFilePath = $request->file('image_file')->store('images/audios', 'public');
-            $audio->image_file = $imageFilePath;
+            if ($imageFile->isValid()) {
+                try {
+                    $uploadedImage = Cloudinary::upload($imageFile->getRealPath(), [
+                        'folder' => 'images',
+                        'public_id' => Str::random(10)
+                    ]);
+                    $imageFilePath = $uploadedImage->getSecurePath();
+                } catch (\Exception $e) {
+                    return response()->json(['error' => 'Failed to upload image to Cloudinary: ' . $e->getMessage()], 400);
+                }
+            }
         }
 
-        // Subir el nuevo archivo de audio si se proporciona
+        // Manejar la carga del nuevo archivo de audio si está presente
         if ($request->hasFile('audio_file')) {
-            // Eliminar el archivo de audio anterior si existe
-            if ($audio->audio_file && Storage::disk('public')->exists($audio->audio_file)) {
-                Storage::disk('public')->delete($audio->audio_file);
+            // Eliminar el archivo de audio anterior de Cloudinary si existe
+            if ($audioFilePath) {
+                $publicId = basename($audioFilePath, '.' . pathinfo($audioFilePath, PATHINFO_EXTENSION));
+                Cloudinary::destroy('audios/' . $publicId, ['resource_type' => 'video']);
             }
 
-            // Subir el nuevo archivo de audio
             $audioFile = $request->file('audio_file');
-            $audioName = Str::random(10) . '.' . $audioFile->getClientOriginalExtension(); // Generar un nombre único y corto
-            $audioFilePath = $audioFile->storeAs('audios', $audioName, 'public');
-            //$audioFilePath = $request->file('audio_file')->store('audios', 'public');
-            $audio->audio_file = $audioFilePath;
+            if ($audioFile->isValid()) {
+                try {
+                    $uploadedAudio = Cloudinary::upload($audioFile->getRealPath(), [
+                        'resource_type' => 'video',
+                        'folder' => 'audios',
+                        'public_id' => Str::random(10)
+                    ]);
+                    $audioFilePath = $uploadedAudio->getSecurePath();
+                } catch (\Exception $e) {
+                    return response()->json(['error' => 'Failed to upload audio to Cloudinary: ' . $e->getMessage()], 400);
+                }
+            }
         }
+        // Preparar los datos para actualizar
+    $dataToUpdate = $request->only([
+        'title', 
+        'description', 
+        'duration', 
+        'genre_id', 
+        'album_id', 
+        'es_binaural', 
+        'frecuencia'
+    ]);
 
-        // Actualizar los datos del audio
-        if ($request->has('title')) {
-            $audio->title = $request->title;
-        }
-        if ($request->has('description')) {
-            $audio->description = $request->description;
-        }
-        if ($request->has('duration')) {
-            $audio->duration = $request->duration;
-        }
-        if ($request->has('genre_id')) {
-            $audio->genre_id = $request->genre_id;
-        }
-        if ($request->has('album_id')) {
-            $audio->album_id = $request->album_id;
-        }
-        if ($request->has('es_binaural')) {
-            $audio->es_binaural = $request->es_binaural;
-            $audio->frecuencia = $request->es_binaural ? $request->frecuencia : null;
-        }
-
-        $audio->save(); // Guardar los cambios
-
-        return response()->json($audio, 200);
+    if ($request->has('image_file')) {
+        $dataToUpdate['image_file'] = $imageFilePath;
     }
+
+    if ($request->has('audio_file')) {
+        $dataToUpdate['audio_file'] = $audioFilePath;
+    }
+
+    // Actualizar el registro en la base de datos
+    $audio->update($dataToUpdate);
+
+    return response()->json($audio, 200);
+
+    }
+
+
+
+
 
     // Método para eliminar un audio
     public function destroy($id)
     {
-        $audio = Audio::findOrFail($id); // Buscar el audio por ID o lanzar un error 404
+        // Iniciar una transacción
+    DB::beginTransaction();
 
-        // Eliminar la imagen del almacenamiento si existe
-        if ($audio->image_file && Storage::disk('public')->exists($audio->image_file)) {
-            Storage::disk('public')->delete($audio->image_file);
+    try {
+        // Encontrar el registro existente
+        $audio = Audio::findOrFail($id);
+
+        // Eliminar el archivo de imagen en Cloudinary si existe
+        if ($audio->image_file) {
+            $publicId = basename($audio->image_file, '.' . pathinfo($audio->image_file, PATHINFO_EXTENSION));
+            Cloudinary::destroy('images/' . $publicId);
         }
 
-        // Eliminar el archivo de audio del almacenamiento si existe
-        if ($audio->audio_file && Storage::disk('public')->exists($audio->audio_file)) {
-            Storage::disk('public')->delete($audio->audio_file);
+        // Eliminar el archivo de audio en Cloudinary si existe
+        if ($audio->audio_file) {
+            $publicId = basename($audio->audio_file, '.' . pathinfo($audio->audio_file, PATHINFO_EXTENSION));
+            Cloudinary::destroy('audios/' . $publicId, ['resource_type' => 'video']);
         }
 
-        // Eliminar el registro del audio
+        // Eliminar el registro de la base de datos
         $audio->delete();
 
-        return response()->json(['message' => 'Audio eliminado exitosamente'], 200);
+        // Confirmar la transacción
+        DB::commit();
+
+        return response()->json(['message' => 'Audio and associated files successfully deleted.'], 200);
+
+    } catch (\Exception $e) {
+        // Revertir la transacción
+        DB::rollBack();
+
+        return response()->json(['error' => 'Failed to delete audio and associated files: ' . $e->getMessage()], 400);
+    }
+
+    
     }
 }

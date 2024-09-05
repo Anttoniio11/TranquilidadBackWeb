@@ -116,7 +116,7 @@ class GenreController extends Controller
             $genre->name = $request->name;
         }
         if ($request->has('description')) {
-            $genre->description = $request->description;
+            $genre->description = $request->description;  
         }
 
         $genre->save(); // Guardar los cambios
