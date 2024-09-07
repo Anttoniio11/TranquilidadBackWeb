@@ -5,82 +5,74 @@ namespace App\Http\Controllers\Api\ApiAlimentacion;
 use App\Http\Controllers\Controller;
 use App\Models\Forum;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ForumController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // Mostrar todos
+    public function index(Request $request)
     {
-        
-        $info = Forum::all();
-        return response()->json($info);
-
+        $forums = Forum::included()->filter()->sort()->getOrPaginate();
+        return response()->json($forums);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // Mostrar uno
+    public function show($id)
     {
-        
+        $forum = Forum::included()->find($id);
+
+        if (!$forum) {
+            return response()->json(['message' => 'Forum not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json($forum);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Crear
     public function store(Request $request)
     {
         $request->validate([
-            'resourceType' => 'required',
-            'content' => 'required',
-            'publicationDate' => 'required'
+            'resourceType' => 'required|string',
+            'content' => 'required|string',
+            'publicationDate' => 'required|date',
         ]);
 
-        $info = Forum::create($request->all());
+        $forum = Forum::create($request->all());
+
+        return response()->json($forum, Response::HTTP_CREATED);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
+    // Actualizar
+    public function update(Request $request, $id)
     {
-        $info = Forum::included()->findOrFail($id);
-        return response()->json($info);
-    }
+        $forum = Forum::find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        if (!$forum) {
+            return response()->json(['message' => 'Forum not found'], Response::HTTP_NOT_FOUND);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Forum $info)
-    {
         $request->validate([
-            'resourceType',
-            'content',
-            'publicationDate'. $info->id,
-
+            'resourceType' => 'string',
+            'content' => 'string',
+            'publicationDate' => 'date',
         ]);
 
-        $info->update($request->all());
+        $forum->update($request->all());
 
-        return response()->json($info);
+        return response()->json($forum);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Forum $info)
+    // Eliminar
+    public function destroy($id)
     {
-        $info->delete();
-        return response()->json();
+        $forum = Forum::find($id);
+
+        if (!$forum) {
+            return response()->json(['message' => 'Forum not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $forum->delete();
+
+        return response()->json(['message' => 'Forum deleted successfully']);
     }
 }

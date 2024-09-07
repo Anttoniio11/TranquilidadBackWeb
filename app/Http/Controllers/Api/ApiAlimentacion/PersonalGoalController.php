@@ -5,86 +5,74 @@ namespace App\Http\Controllers\Api\ApiAlimentacion;
 use App\Http\Controllers\Controller;
 use App\Models\PersonalGoal;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PersonalGoalController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // Mostrar todos
+    public function index(Request $request)
     {
-        
-        $info = PersonalGoal::all();
-        return response()->json($info);
-
+        $personalGoals = PersonalGoal::included()->filter()->sort()->getOrPaginate();
+        return response()->json($personalGoals);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // Mostrar uno
+    public function show($id)
     {
-        
+        $personalGoal = PersonalGoal::included()->find($id);
+
+        if (!$personalGoal) {
+            return response()->json(['message' => 'PersonalGoal not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json($personalGoal);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Crear
     public function store(Request $request)
     {
         $request->validate([
-            'description' => 'required',
-            'pesoDeseadoKg' => 'required',
-            'comidaHabitual' => 'required',
-            'alturaCm' => 'required',
-            'tipoMetabolismo' => 'required',
+            'description' => 'required|string',
+            'healthPlan_id' => 'required|exists:health_plans,id',
+            'processLog_id' => 'required|exists:process_logs,id',
         ]);
 
-        $info = PersonalGoal::create($request->all());
+        $personalGoal = PersonalGoal::create($request->all());
+
+        return response()->json($personalGoal, Response::HTTP_CREATED);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
+    // Actualizar
+    public function update(Request $request, $id)
     {
-        $info = PersonalGoal::included()->findOrFail($id);
-        return response()->json($info);
-    }
+        $personalGoal = PersonalGoal::find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        if (!$personalGoal) {
+            return response()->json(['message' => 'PersonalGoal not found'], Response::HTTP_NOT_FOUND);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, PersonalGoal $info)
-    {
         $request->validate([
-            'pesoKg',
-            'pesoDeseadoKg',
-            'comidaHabitual',
-            'alturaCm',
-            'tipoMetabolismo' . $info->id,
-
+            'description' => 'string',
+            'healthPlan_id' => 'exists:health_plans,id',
+            'processLog_id' => 'exists:process_logs,id',
         ]);
 
-        $info->update($request->all());
+        $personalGoal->update($request->all());
 
-        return response()->json($info);
+        return response()->json($personalGoal);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(PersonalGoal $info)
+    // Eliminar
+    public function destroy($id)
     {
-        $info->delete();
-        return response()->json();
+        $personalGoal = PersonalGoal::find($id);
+
+        if (!$personalGoal) {
+            return response()->json(['message' => 'PersonalGoal not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $personalGoal->delete();
+
+        return response()->json(['message' => 'PersonalGoal deleted successfully']);
     }
 }

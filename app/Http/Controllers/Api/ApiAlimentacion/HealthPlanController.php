@@ -4,88 +4,79 @@ namespace App\Http\Controllers\Api\ApiAlimentacion;
 
 use App\Http\Controllers\Controller;
 use App\Models\HealthPlan;
-use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class HealthPlanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // Mostrar todos
+    public function index(Request $request)
     {
-        
-        $info = HealthPlan::all();
-        return response()->json($info);
-
+        $healthPlans = HealthPlan::included()->filter()->sort()->getOrPaginate();
+        return response()->json($healthPlans);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // Mostrar uno
+    public function show($id)
     {
-        
+        $healthPlan = HealthPlan::included()->find($id);
+
+        if (!$healthPlan) {
+            return response()->json(['message' => 'HealthPlan not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json($healthPlan);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Crear
     public function store(Request $request)
     {
         $request->validate([
-            'pesoKg' => 'required',
-            'pesoDeseadoKg' => 'required',
-            'comidaHabitual' => 'required',
-            'alturaCm' => 'required',
-            'tipoMetabolismo' => 'required',
+            'pesoKg' => 'required|integer',
+            'pesoDeseadoKg' => 'required|integer',
+            'comidaHabitual' => 'required|string',
+            'alturaCm' => 'required|string',
+            'tipoMetabolismo' => 'required|string',
         ]);
 
-        $info = HealthPlan::create($request->all());
+        $healthPlan = HealthPlan::create($request->all());
+
+        return response()->json($healthPlan, Response::HTTP_CREATED);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
+    // Actualizar
+    public function update(Request $request, $id)
     {
-        $info = HealthPlan::included()->findOrFail($id);
-        return response()->json($info);
-    }
+        $healthPlan = HealthPlan::find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        if (!$healthPlan) {
+            return response()->json(['message' => 'HealthPlan not found'], Response::HTTP_NOT_FOUND);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, HealthPlan $info)
-    {
         $request->validate([
-            'pesoKg',
-            'pesoDeseadoKg',
-            'comidaHabitual',
-            'alturaCm',
-            'tipoMetabolismo' . $info->id,
-
+            'pesoKg' => 'integer',
+            'pesoDeseadoKg' => 'integer',
+            'comidaHabitual' => 'string',
+            'alturaCm' => 'string',
+            'tipoMetabolismo' => 'string',
         ]);
 
-        $info->update($request->all());
+        $healthPlan->update($request->all());
 
-        return response()->json($info);
+        return response()->json($healthPlan);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(HealthPlan $info)
+    // Eliminar
+    public function destroy($id)
     {
-        $info->delete();
-        return response()->json();
+        $healthPlan = HealthPlan::find($id);
+
+        if (!$healthPlan) {
+            return response()->json(['message' => 'HealthPlan not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $healthPlan->delete();
+
+        return response()->json(['message' => 'HealthPlan deleted successfully']);
     }
 }

@@ -3,63 +3,76 @@
 namespace App\Http\Controllers\Api\ApiAlimentacion;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProcessLog;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ProcessLogController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    // Mostrar todos
+    public function index(Request $request)
     {
-        //
+        $processLogs = ProcessLog::included()->filter()->sort()->getOrPaginate();
+        return response()->json($processLogs);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Crear
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'registrationDate' => 'required|date',
+            'forum_id' => 'required|exists:forums,id',
+        ]);
+
+        $processLog = ProcessLog::create($request->all());
+
+        return response()->json($processLog, Response::HTTP_CREATED);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Mostrar uno
+    public function show($id)
     {
-        //
+        $processLog = ProcessLog::included()->find($id);
+
+        if (!$processLog) {
+            return response()->json(['message' => 'ProcessLog not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json($processLog);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // Actualizar
+    public function update(Request $request, $id)
     {
-        //
+        $processLog = ProcessLog::find($id);
+
+        if (!$processLog) {
+            return response()->json(['message' => 'ProcessLog not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $request->validate([
+            'registrationDate' => 'date',
+            'forum_id' => 'exists:forums,id',
+        ]);
+
+        $processLog->update($request->all());
+
+        return response()->json($processLog);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Eliminar
+    public function destroy($id)
     {
-        //
-    }
+        $processLog = ProcessLog::find($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        if (!$processLog) {
+            return response()->json(['message' => 'ProcessLog not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $processLog->delete();
+
+        return response()->json(['message' => 'ProcessLog deleted successfully']);
     }
 }
+ 
