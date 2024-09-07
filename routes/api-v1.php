@@ -8,7 +8,8 @@ use App\Http\Controllers\Api\ApiAlimentacion\HealthPlanController;
 use App\Http\Controllers\Api\ApiAlimentacion\PersonalGoalController;
 use App\Http\Controllers\Api\ApiAlimentacion\ProcessLogController;
 use App\Http\Controllers\Api\ApiAlimentacion\RecommendationController;
-
+use App\Http\Controllers\Api\ApiAlimentacion\ResultController;
+use App\Http\Controllers\Api\ApiAlimentacion\QuestionnaireController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -34,17 +35,22 @@ Route::get('forums/{id}', [ForumController::class, 'show'])->name('api.v1.forums
 Route::put('forums/{id}', [ForumController::class, 'update'])->name('api.v1.forums.update');
 Route::delete('forums/{id}', [ForumController::class, 'destroy'])->name('api.v1.forums.destroy');
 
-<<<<<<< HEAD
- //rutas resultados
- Route::get('resultados', [ResultController::class,'index'])->name('api.v1.result.index');
- Route::post('resultados', [ResultController::class,'store'])->name('api.v1.results.store');
- Route::post('resultados/{idQ}/{idU}', [ResultController::class, 'create'])->name('api.v1.result.create');
- Route::get('resultados/{id}', [QuestionnaireController::class,'show'])->name('api.v1.result.show');
- Route::put('resultados/{info}', [QuestionnaireController::class,'update'])->name('api.v1.resultados.update');
- Route::delete('resultados/{info}', [QuestionnaireController::class,'destroy'])->name('api.v1.questionnaire.delete');
-=======
+ //rutas questionario
+ Route::get('cuestionario', [QuestionnaireController::class,'index'])->name('api.v1.questionnaire.index');
+ Route::post('cuestionario', [QuestionnaireController::class,'store'])->name('api.v1.questionnaire.store');
+ Route::get('cuestionario/{id}', [QuestionnaireController::class,'show'])->name('api.v1.questionnaire.show');
+ Route::put('cuestionario/{info}', [QuestionnaireController::class,'update'])->name('api.v1.questionnaire.update');
+ Route::delete('cuestionario/{info}', [QuestionnaireController::class,'destroy'])->name('api.v1.questionnaire.delete');
+
+  //rutas resultados
+  Route::get('resultados', [ResultController::class,'index'])->name('api.v1.result.index');
+  Route::post('resultados', [ResultController::class,'store'])->name('api.v1.results.store');
+  Route::post('resultados/{idQ}/{idU}', [ResultController::class, 'create'])->name('api.v1.result.create');
+  Route::get('resultados/{id}', [QuestionnaireController::class,'show'])->name('api.v1.result.show');
+  Route::put('resultados/{info}', [QuestionnaireController::class,'update'])->name('api.v1.resultados.update');
+  Route::delete('resultados/{info}', [QuestionnaireController::class,'destroy'])->name('api.v1.questionnaire.delete');
+
 //rutas para healthP
->>>>>>> eef1320da1a479ff4b21e0728f837d267bce268f
 
 Route::get('health-plans', [HealthPlanController::class, 'index'])->name('api.v1.healthPlans.index');
 Route::post('health-plans', [HealthPlanController::class, 'store'])->name('api.v1.healthPlans.store');
@@ -52,13 +58,6 @@ Route::get('health-plans/{id}', [HealthPlanController::class, 'show'])->name('ap
 Route::put('health-plans/{id}', [HealthPlanController::class, 'update'])->name('api.v1.healthPlans.update');
 Route::delete('health-plans/{id}', [HealthPlanController::class, 'destroy'])->name('api.v1.healthPlans.destroy');
 
-<<<<<<< HEAD
-//rutas forum 
-
-//rutas personalGoal
-
-//rutas processLog
-=======
 //rutas personalGoal
 
 Route::get('personal-goals', [PersonalGoalController::class, 'index'])->name('api.v1.personalGoals.index');
@@ -82,5 +81,4 @@ Route::post('recommendations', [RecommendationController::class, 'store'])->name
 Route::get('recommendations/{id}', [RecommendationController::class, 'show'])->name('api.v1.recommendations.show');
 Route::put('recommendations/{id}', [RecommendationController::class, 'update'])->name('api.v1.recommendations.update');
 Route::delete('recommendations/{id}', [RecommendationController::class, 'destroy'])->name('api.v1.recommendations.destroy');
->>>>>>> eef1320da1a479ff4b21e0728f837d267bce268f
 
