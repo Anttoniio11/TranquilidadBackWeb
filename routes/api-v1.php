@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\ApiAlimentacion\FoodController;
 use App\Http\Controllers\Api\ApiAlimentacion\HealthPlanController;
+use App\Http\Controllers\Api\ApiAlimentacion\QuestionnaireController;
+use App\Http\Controllers\Api\ApiAlimentacion\ResultController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,10 +22,31 @@ use Illuminate\Support\Facades\Route;
     //return $request->user();
 //});
 
+//rutas alimentacion
 Route::get('search/{food}', [FoodController::class, 'show']);
 
-Route::get('healthplan', [HealthPlanController::class,'index'])->name('api.v1.HealthPlan.index');
- Route::post('healthplan', [HealthPlanController::class,'store'])->name('api.v1.HealthPlan.store');
- Route::get('healthplan/{id}', [HealthPlanController::class,'show'])->name('api.v1.HealthPlan.show');
- Route::put('healthplan/{info}', [HealthPlanController::class,'update'])->name('api.v1.HealthPlan.update');
- Route::delete('healthplan/{id}', [HealthPlanController::class,'destroy'])->name('api.v1.HealthPlan.delete');
+//rutas plan bienestar
+Route::get('healthplan', [HealthPlanController::class,'index'])->name('api.v1.healthplan.index');
+ Route::post('healthplan', [HealthPlanController::class,'store'])->name('api.v1.healthplan.store');
+ Route::get('healthplan/{id}', [HealthPlanController::class,'show'])->name('api.v1.healthplan.show');
+ Route::put('healthplan/{info}', [HealthPlanController::class,'update'])->name('api.v1.healthplan.update');
+ Route::delete('healthplan/{info}', [HealthPlanController::class,'destroy'])->name('api.v1.healthplan.delete');
+
+ //rutas questionario
+ Route::get('cuestionario', [QuestionnaireController::class,'index'])->name('api.v1.questionnaire.index');
+ Route::post('cuestionario', [QuestionnaireController::class,'store'])->name('api.v1.questionnaire.store');
+ Route::get('cuestionario/{id}', [QuestionnaireController::class,'show'])->name('api.v1.questionnaire.show');
+ Route::put('cuestionario/{info}', [QuestionnaireController::class,'update'])->name('api.v1.questionnaire.update');
+ Route::delete('cuestionario/{info}', [QuestionnaireController::class,'destroy'])->name('api.v1.questionnaire.delete');
+
+ //rutas resultados
+ Route::post('resultados/{questionnaireId}', [ResultController::class,'store'])->name('api.v1.results.store');
+
+ //rutas recomendation
+
+ //rutas forum 
+
+ //rutas personalGoal
+
+ //rutas processLog
+

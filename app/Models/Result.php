@@ -23,4 +23,7 @@ class Result extends Model
     public function recommendations (){
         return $this->hasMany(Recommendation::class);
     }
+
+    protected $fillable = ['resultados','questionnaire_id','user_id'];
+    
 }

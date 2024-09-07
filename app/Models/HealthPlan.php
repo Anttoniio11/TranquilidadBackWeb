@@ -14,6 +14,11 @@ class HealthPlan extends Model
         return $this->belongsTo(Recommendation::class);
     }
 
+    //manda relacion uno a muchos
+    public function personalgoals (){
+        return $this->belongsTo(PersonalGoal::class);
+    }
+
     protected $fillable = ['pesoKg','pesoDeseadoKg','comidaHabitual','alturaCm','tipoMetabolismo'];
 
 

@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Api\ApiAlimentacion;
 
 use App\Http\Controllers\Controller;
-use App\Models\HealthPlan;
-use Illuminate\Auth\Events\Validated;
+use App\Models\PersonalGoal;
 use Illuminate\Http\Request;
 
-class HealthPlanController extends Controller
+class PersonalGoalController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +14,7 @@ class HealthPlanController extends Controller
     public function index()
     {
         
-        $info = HealthPlan::all();
+        $info = PersonalGoal::all();
         return response()->json($info);
 
     }
@@ -34,14 +33,14 @@ class HealthPlanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'pesoKg' => 'required',
+            'description' => 'required',
             'pesoDeseadoKg' => 'required',
             'comidaHabitual' => 'required',
             'alturaCm' => 'required',
             'tipoMetabolismo' => 'required',
         ]);
 
-        $info = HealthPlan::create($request->all());
+        $info = PersonalGoal::create($request->all());
     }
 
     /**
@@ -49,7 +48,7 @@ class HealthPlanController extends Controller
      */
     public function show($id)
     {
-        $info = HealthPlan::included()->findOrFail($id);
+        $info = PersonalGoal::included()->findOrFail($id);
         return response()->json($info);
     }
 
@@ -64,7 +63,7 @@ class HealthPlanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, HealthPlan $info)
+    public function update(Request $request, PersonalGoal $info)
     {
         $request->validate([
             'pesoKg',
@@ -83,7 +82,7 @@ class HealthPlanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(HealthPlan $info)
+    public function destroy(PersonalGoal $info)
     {
         $info->delete();
         return response()->json();

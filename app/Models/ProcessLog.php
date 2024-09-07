@@ -13,4 +13,9 @@ class ProcessLog extends Model
     public function forum (){
         return $this->belongsTo(Forum::class);
     }
+
+    //manda relacion uno a muchos
+    public function personalgoals (){
+        return $this->belongsTo(PersonalGoal::class);
+    }
 }

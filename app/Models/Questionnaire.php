@@ -12,4 +12,8 @@ class Questionnaire extends Model
     public function results (){
         return $this->hasMany(Result::class);
     }
+
+    protected $fillable = ['sexo','edad','peso','altura','actividad_fisica','objetivo','trabajo','sueño','estres','comida_rapida','frecuencia_comidas','alcohol','condicion_medica','frutas_verduras','energia'];
+
+
 }

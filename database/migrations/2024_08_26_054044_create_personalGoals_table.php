@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('personalGoals', function (Blueprint $table) {
             $table->id();
 
-            $table->string('descripcionMeta');
+            $table->string('description');
             
             //foreign of healthPlan 
             $table->unsignedBigInteger('healthPlan_id');
