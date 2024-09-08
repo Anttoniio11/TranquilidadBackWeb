@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controllers;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Pincel;
+use App\Models\Brush;
 
 class BrushController extends Controller
 {
     public function index()
     {
-        $brushes=Pincel::all();
-        //$brushes = Pincel::included()->get();
-        //$brushes= Pincel::included()->filter();
-        //$brushes=Pincel::included()->filter()->sort()->get();
-        //$brushes=Pincel::included()->filter()->sort()->getOrPaginate();
+        $brushes=Brush::all();
+        //$brushes = Brush::included()->get();
+        //$brushes= Brush::included()->filter();
+        //$brushes=Brush::included()->filter()->sort()->get();
+        //$brushes=Brush::included()->filter()->sort()->getOrPaginate();
         return response()->json($brushes);
     }
 
@@ -28,14 +28,14 @@ class BrushController extends Controller
     {
 
         $request->validate([
-            'nombre_pincel' => 'required|max:255',
+            'nombre_Brush' => 'required|max:255',
             'textura' => 'required|max:255',
             'estilo_trazo' => 'required|max:255',
             
           
         ]);
 
-        $brush = Pincel::create($request->all());
+        $brush = Brush::create($request->all());
 
         return response()->json($brush);
     }
@@ -43,12 +43,12 @@ class BrushController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Pincel  $brush
+     * @param  \App\Models\Brush  $brush
      * @return \Illuminate\Http\Response
      */
     public function show($id) //si se pasa $id se utiliza la comentada
     {  
-        $brush= Pincel::included()->findOrFail($id);
+        $brush= Brush::included()->findOrFail($id);
         return response()->json($brush);
 
     }
@@ -57,13 +57,13 @@ class BrushController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Pincel  $brush
+     * @param  \App\Models\Brush  $brush
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pincel $brush)
+    public function update(Request $request, Brush $brush)
     {
         $request->validate([
-           'nombre_pincel' => 'required|max:255',
+           'nombre_Brush' => 'required|max:255',
             'textura' => 'required|max:255',
             'estilo_trazo' => 'required|max:255',
         ]);
@@ -76,10 +76,10 @@ class BrushController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Pincel  $brush
+     * @param  \App\Models\Brush  $brush
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pincel $brush)
+    public function destroy(Brush $brush)
     {
         $brush->delete();
         return response()->json($brush);

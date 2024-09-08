@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-use App\Http\Controllers\Controllers;
+use App\Http\Controllers\Controller;
 use App\Models\Shared;
 use Illuminate\Http\Request;
 
@@ -10,19 +10,11 @@ class SharedController extends Controller
     //
     public function index()
     {
-<<<<<<< HEAD:app/Http/Controllers/Api/CompartidoController.php
-        //$shared=Compartido::all();
-        $shared = Compartido::included()->get();
-        //$shared=Compartido::included()->filter();
-        //$shared=Compartido::included()->filter()->sort()->get();
-        //$shared=Compartido::included()->filter()->sort()->getOrPaginate();
-=======
         $shared=Shared::all();
         //$shared = Shared::included()->get();
         //$shared=Shared::included()->filter();
         //$shared=Shared::included()->filter()->sort()->get();
         //$shared=Shared::included()->filter()->sort()->getOrPaginate();
->>>>>>> e7ee0d8c861799810f9495ad33caab6cc1867397:app/Http/Controllers/Api/SharedController.php
         return response()->json($shared);
     }
 

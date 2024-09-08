@@ -1,25 +1,21 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-<<<<<<< HEAD:app/Http/Controllers/Api/ReaccionController.php
-use App\Models\Reaccion;
-use App\Http\Controllers\Controller;
-=======
 
-use App\Http\Controllers\Controllers;
->>>>>>> e7ee0d8c861799810f9495ad33caab6cc1867397:app/Http/Controllers/Api/ToolColorController.php
+use App\Http\Controllers\Controller;
+use App\Models\ToolColor;
 use Illuminate\Http\Request;
 
 class ToolColorController extends Controller
 {
     public function index()
     {
-        $reactions=Reaccion::all();
-        //$reactions = Reaccion::included()->get();
-        //$reactions= Reaccion::included()->filter();
-        //$reactions=Reaccion::included()->filter()->sort()->get();
-        //$reactions=Reaccion::included()->filter()->sort()->getOrPaginate();
-        return response()->json($reactions);
+        $ToolColors=ToolColor::all();
+        //$ToolColors = ToolColor::included()->get();
+        //$ToolColors= ToolColor::included()->filter();
+        //$ToolColors=ToolColor::included()->filter()->sort()->get();
+        //$ToolColors=ToolColor::included()->filter()->sort()->getOrPaginate();
+        return response()->json($ToolColors);
     }
 
     /**
@@ -33,28 +29,28 @@ class ToolColorController extends Controller
 
         $request->validate([
             'user_id'=> 'required|exists:users,id',
-            'reaccion_id'=> 'required|exists:reaccions,id',
-            'tipo_reaccion' => 'required|max:255',
+            'ToolColor_id'=> 'required|exists:ToolColors,id',
+            'tipo_ToolColor' => 'required|max:255',
             
             
           
         ]);
 
-        $reaction = Reaccion::create($request->all());
+        $ToolColor = ToolColor::create($request->all());
 
-        return response()->json($reaction);
+        return response()->json($ToolColor);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Reaccion  $reaction
+     * @param  \App\Models\ToolColor  $ToolColor
      * @return \Illuminate\Http\Response
      */
     public function show($id) //si se pasa $id se utiliza la comentada
     {  
-        $reaction= Reaccion::included()->findOrFail($id);
-        return response()->json($reaction);
+        $ToolColor= ToolColor::included()->findOrFail($id);
+        return response()->json($ToolColor);
 
     }
 
@@ -62,32 +58,32 @@ class ToolColorController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Reaccion  $reaction
+     * @param  \App\Models\ToolColor  $ToolColor
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Reaccion $reaction)
+    public function update(Request $request, ToolColor $ToolColor)
     {
         $request->validate([
             'user_id'=> 'required|exists:users,id',
-            'reaccion_id'=> 'required|exists:reaccions,id',
-            'tipo_reaccion' => 'required|max:255',
+            'ToolColor_id'=> 'required|exists:ToolColors,id',
+            'tipo_ToolColor' => 'required|max:255',
             
         ]);
 
-        $reaction->update($request->all());
+        $ToolColor->update($request->all());
 
-        return response()->json($reaction);
+        return response()->json($ToolColor);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Reaccion  $reaction
+     * @param  \App\Models\ToolColor  $ToolColor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Reaccion $reaction)
+    public function destroy(ToolColor $ToolColor)
     {
-        $reaction->delete();
-        return response()->json($reaction);
+        $ToolColor->delete();
+        return response()->json($ToolColor);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-use App\Http\Controllers\Controllers;
+use App\Http\Controllers\Controller;
 use App\Models\Drawing;
 use Illuminate\Http\Request;
 
@@ -28,17 +28,10 @@ class DrawingController extends Controller
     {
 
         $request->validate([
-<<<<<<< HEAD:app/Http/Controllers/Api/DibujoController.php
-            'user_id'=> 'required|exists:users,id',
-            'nombre_dibujo' => 'required|max:255',
-            'contenido_dibujo' => 'required|max:255',
-            'carpeta_id'=> 'required|exists:carpetas,id',
-=======
             'user_id' => 'required|exists:users,id',
             'gallery_id' => 'required|exists:galleries,id',
             'drawing_name'=>'required|max:100',
             'drawing_url'=>'required|max:100',
->>>>>>> e7ee0d8c861799810f9495ad33caab6cc1867397:app/Http/Controllers/Api/DrawingController.php
 
         ]);
 
@@ -71,17 +64,10 @@ class DrawingController extends Controller
     public function update(Request $request, Drawing $drawing)
     {
         $request->validate([
-<<<<<<< HEAD:app/Http/Controllers/Api/DibujoController.php
-            'user_id'=> 'required|exists:users,id',
-            'nombre_dibujo' => 'required|max:255',
-            'contenido_dibujo' => 'required|max:255',
-            'carpeta_id'=> 'required|exists:carpetas,id',
-=======
             'user_id' => 'required|exists:users,id',
             'gallery_id' => 'required|exists:galleries,id',
             'drawing_name'=>'required|max:100',
             'drawing_url'=>'required|max:100',
->>>>>>> e7ee0d8c861799810f9495ad33caab6cc1867397:app/Http/Controllers/Api/DrawingController.php
 
         ]);
 
