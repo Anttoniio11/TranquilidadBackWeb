@@ -1,9 +1,18 @@
 <?php
-use App\Http\Controllers\Api\CarpetaController;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\CarpetaController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\DrawingController;
+use App\Http\Controllers\Api\GalleryController;
+use App\Http\Controllers\Api\PaintingController;
 use App\Http\Controllers\Api\PincelController;
+use App\Http\Controllers\Api\PublicationController;
+use App\Http\Controllers\Api\ReactionController;
+use App\Http\Controllers\Api\SharedController;
+use App\Http\Controllers\Api\TemplateController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,15 +28,54 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-/* esta es una forma de agrupar rutas
-Route::controller(UserController::class)->group(function(){
-    Route::post('users', 'store')->name('api.v1.users.store');
-    Route::get('users', 'index')->name('api.v1.users.index');
-    Route::get('users/{user}', 'show')->name('api.v1.users.show');
-    Route::put('users/{user}', 'update')->name('api.v1.users.update');
-    Route::delete('users/{user}', 'destroy')->name('api.v1.users.delete');
+Route::get('/', function () {
+    return view('welcome');
 });
-*/
-Route::get('pincels', [PincelController::class,'index'])->name('api.v1.pincels.index');
-Route::post('pincels', [PincelController::class,'store'])->name('api.v1.pincels.store');
 
+Route::controller(CategoryController::class)->group(function(){
+    Route::post('categories', 'store')->name('api.v1.categories.store');
+    Route::get('categories', 'index')->name('api.v1.categories.index');
+    Route::get('categories/{category}', 'show')->name('api.v1.categories.show');
+    Route::put('categories/{category}', 'update')->name('api.v1.categories.update');
+    Route::delete('categories/{category}', 'destroy')->name('api.v1.categories.delete');
+});
+
+Route::controller(TemplateController::class)->group(function(){
+    Route::post('templates', 'store')->name('api.v1.templates.store');
+    Route::get('templates', 'index')->name('api.v1.templates.index');
+    Route::get('templates/{template}', 'show')->name('api.v1.templates.show');
+    Route::put('templates/{template}', 'update')->name('api.v1.templates.update');
+    Route::delete('templates/{template}', 'destroy')->name('api.v1.templates.delete');
+});
+
+Route::controller(PaintingController::class)->group(function(){
+    Route::post('paintings', 'store')->name('api.v1.paintings.store');
+    Route::get('paintings', 'index')->name('api.v1.paintings.index');
+    Route::get('paintings/{painting}', 'show')->name('api.v1.paintings.show');
+    Route::put('paintings/{painting}', 'update')->name('api.v1.paintings.update');
+    Route::delete('paintings/{painting}', 'destroy')->name('api.v1.paintings.delete');
+});
+
+Route::controller(DrawingController::class)->group(function(){
+    Route::post('drawings', 'store')->name('api.v1.drawings.store');
+    Route::get('drawings', 'index')->name('api.v1.drawings.index');
+    Route::get('drawings/{drawing}', 'show')->name('api.v1.drawings.show');
+    Route::put('drawings/{drawing}', 'update')->name('api.v1.drawings.update');
+    Route::delete('drawings/{drawing}', 'destroy')->name('api.v1.drawings.delete');
+});
+
+Route::controller(GalleryController::class)->group(function(){
+    Route::post('galleries', 'store')->name('api.v1.galleries.store');
+    Route::get('galleries', 'index')->name('api.v1.galleries.index');
+    Route::get('galleries/{gallery}', 'show')->name('api.v1.galleries.show');
+    Route::put('galleries/{gallery}', 'update')->name('api.v1.galleries.update');
+    Route::delete('galleries/{gallery}', 'destroy')->name('api.v1.galleries.delete');
+});
+
+Route::controller(PublicationController::class)->group(function(){
+    Route::post('publications', 'store')->name('api.v1.publications.store');
+    Route::get('publications', 'index')->name('api.v1.publications.index');
+    Route::get('publications/{publication}', 'show')->name('api.v1.publications.show');
+    Route::put('publications/{publication}', 'update')->name('api.v1.publications.update');
+    Route::delete('publications/{publication}', 'destroy')->name('api.v1.publications.delete');
+});

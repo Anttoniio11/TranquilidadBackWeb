@@ -43,27 +43,27 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function publicacions(){
-        return $this->hasMany(Publicacion::class);
+    public function publications(){
+        return $this->hasMany(Publication::class);
     }
 
-    public function compartidos(){
-        return $this->hasMany(Compartido::class);
+    public function shareds(){
+        return $this->hasMany(Shared::class);
     }
 
-    public function reaccions(){
-        return $this->hasMany(Reaccion::class);
+    public function reactions(){
+        return $this->hasMany(Reaction::class);
     }
 
-    public function carpetas(){
-        return $this->hasMany(Carpeta::class);
+    public function galleries(){
+        return $this->hasMany(Gallery::class);
     }
 
-    public function pinturas(){
-        return $this->hasMany(Pintura::class);
+    public function paintings(){
+        return $this->hasMany(Painting::class);
     }
 
-    public function dibujos(){
-        return $this->hasMany(Dibujo::class);
+    public function drawings(){
+        return $this->hasMany(Drawing::class);
     }
 }
