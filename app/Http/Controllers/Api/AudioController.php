@@ -53,7 +53,7 @@ class AudioController extends Controller
             if ($imageFile->isValid()) {
                 try {
                     $uploadedImage = Cloudinary::upload($imageFile->getRealPath(), [
-                        'folder' => 'images',
+                        'folder' => 'audios/images',
                         'public_id' => Str::random(10)
                     ]);
                     $imageFilePath = $uploadedImage->getSecurePath(); // Obtener la URL segura de la imagen
@@ -76,8 +76,8 @@ class AudioController extends Controller
                 try {
                     // Cambiar a uploadVideo() para cargar correctamente archivos de audio
                     $uploadedAudio = Cloudinary::upload($audioFile->getRealPath(), [
-                        'resource_type' => 'video',  // Especifica que el tipo de recurso es un video/audio
-                        'folder' => 'audios',
+                        'resource_type' => 'video',  // tipo de recurso = video ;aunque sea audio, solo asi lo puede entender Cloudinary
+                        'folder' => 'audios/mp3',
                         'public_id' => Str::random(10)
                     ]);
                     $audioFilePath = $uploadedAudio->getSecurePath();
