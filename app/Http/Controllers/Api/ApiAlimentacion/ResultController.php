@@ -8,147 +8,246 @@ use App\Models\Result;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+
 class ResultController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    //lista
     public function index()
     {
         $result = Result::all();
-        return response()->json($result);  
+        return response()->json($result);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create($idQ,$idU)
+
+    //crear el resultdos de acuerdo a su user y cuestionario
+    public function create($idQ, $idU)
     {
-        $validatedData = Questionnaire::find($idQ);
+        $questionnaire = Questionnaire::find($idQ);
         $user = User::find($idU);
 
-        // calcular el tmb segun el sexo
-        if ($validatedData['sexo'] === 'masculino') {
-            $tmb = 88.362 + (13.397 * $validatedData['peso']) + (4.799 * $validatedData['altura']) - (5.677 * $validatedData['edad']);
-        } else {
-            $tmb = 447.593 + (9.247 * $validatedData['peso']) + (3.098 * $validatedData['altura']) - (4.330 * $validatedData['edad']);
+        if (!$questionnaire || !$user) {
+            return response()->json(['message' => 'Datos no encontrados'], 404);
         }
 
-        // ajustar tmb segun atividad fisica
-        $actividadFisica = match ($validatedData['actividad_fisica']) {
-            'sedentario' => 1.2,
-            'ligero' => 1.375,
-            'moderado' => 1.55,
-            'activo' => 1.725,
-            'muy_activo' => 1.9,
-        };
-
-        $tmbAjustado = $tmb * $actividadFisica;
-
-        // segun respuestas Trabajo/Actividad Principal
-        if ($validatedData['trabajo'] === 'fisico') {
-            $tmbAjustado *= 1.1; // Aumenta si la actividad es fisica
-        } elseif ($validatedData['trabajo'] === 'oficina') {
-            $tmbAjustado *= 0.9; // baja si es sedentario
+        function calcularTMB($genero, $peso, $altura, $edad)
+        {
+            if ($genero === 'masculino') {
+                return 88.362 + (13.397 * $peso) + (4.799 * $altura) - (5.677 * $edad);
+            } else {
+                return 447.593 + (9.247 * $peso) + (3.098 * $altura) - (4.330 * $edad);
+            }
         }
 
-        // sueño y estres
-        if ($validatedData['sueño'] === 'menos_5h' || $validatedData['estres'] === 'muy_alto') {
-            $tmbAjustado *= 0.95; // reduce el tmb si el sueño o estres es muy alto
+        function ajustarPorActividad($tmb, $nivelActividad)
+        {
+            switch ($nivelActividad) {
+                case 'sedentario':
+                    return $tmb * 1.2;
+                case 'ligero':
+                    return $tmb * 1.375;
+                case 'moderado':
+                    return $tmb * 1.55;
+                case 'activo':
+                    return $tmb * 1.725;
+                case 'muy activo':
+                    return $tmb * 1.9;
+                default:
+                    return $tmb;
+            }
         }
 
-        // consumo de alimentos caloricos
-        if ($validatedData['comida_rapida'] === 'diario') {
-            $tmbAjustado *= 1.1; // aumenta la ingesta calorica
+        function ajustarPorTrabajo($calorias, $tipoTrabajo)
+        {
+            if ($tipoTrabajo === 'sedentario') {
+                return $calorias * 0.95;
+            } elseif ($tipoTrabajo === 'activo') {
+                return $calorias * 1.1;
+            }
+            return $calorias;
         }
 
-        // frecuencia de comida
-        if ($validatedData['frecuencia_comidas'] === '1_2_veces') {
-            $tmbAjustado *= 0.9; // reduce el tmb si la respuesta es baja
+        function ajustarPorSuenoEstres($calorias, $horasDormidas, $nivelEstres)
+        {
+            if ($horasDormidas < 6 || $nivelEstres === 'alto') {
+                return $calorias * 0.95;
+            }
+            return $calorias;
         }
 
-        // Consumo de Alcohol
-        if ($validatedData['alcohol'] === 'diario') {
-            $tmbAjustado *= 1.05; // aumenta si hay consumo de alcohol
+        function ajustarPorComidaProcesada($calorias, $frecuenciaComidaProcesada)
+        {
+            if ($frecuenciaComidaProcesada === 'alta') {
+                return $calorias * 1.1;
+            }
+            return $calorias;
         }
 
-        // Ajustes finales
-        $resultadoFinal = match ($validatedData['objetivo']) {
-            'mantener_peso' => $tmbAjustado,
-            'perder_peso' => $tmbAjustado * 0.85, // reduccion del 15% para perder peso
-            'ganar_peso' => $tmbAjustado * 1.15, // aumento del 15% para perder peso
-        };
-    
+        function ajustarPorFrecuenciaComidas($calorias, $frecuenciaComidas)
+        {
+            if ($frecuenciaComidas < 3) {
+                return $calorias * 0.9;
+            }
+            return $calorias;
+        }
 
-        //$cuestion = Questionnaire::find(1); 
-        //$user = User::find(1);
-        //guardar
-        //$test = $questionnaire->results()->create();
-        $test = Result::create([
-            'resultados' => $resultadoFinal,
-            'questionnaire_id' => $validatedData->id,
+        function ajustarPorAlcohol($calorias, $consumoAlcohol)
+        {
+            if ($consumoAlcohol === 'regular') {
+                return $calorias + 200;
+            }
+            return $calorias;
+        }
+
+        function generarRecomendaciones($caloriasTotales, $objetivo)
+        {
+            $recomendaciones = [];
+
+            if ($objetivo === 'mantener peso') {
+                $recomendaciones[] = "Para mantener tu peso, deberías consumir aproximadamente $caloriasTotales calorías al día.";
+            } elseif ($objetivo === 'perder peso') {
+                $caloriasPerdida = $caloriasTotales * 0.85;
+                $recomendaciones[] = "Para perder peso, considera reducir tu ingesta calórica a $caloriasPerdida calorías diarias.";
+            } elseif ($objetivo === 'ganar peso') {
+                $caloriasGanar = $caloriasTotales * 1.15;
+                $recomendaciones[] = "Para ganar peso, deberías incrementar tu ingesta calórica a $caloriasGanar calorías diarias.";
+            }
+
+            if ($caloriasTotales > 3000) {
+                $recomendaciones[] = "Tu consumo calórico es alto. Considera equilibrar tus comidas con más alimentos frescos y evitar alimentos procesados.";
+            } elseif ($caloriasTotales < 1500) {
+                $recomendaciones[] = "Tu consumo calórico es bajo. Asegúrate de no saltarte comidas y de incluir proteínas suficientes en tu dieta.";
+            }
+
+            return $recomendaciones;
+            
+        }
+        
+
+        // Obtener los datos del cuestionario
+        $genero = $questionnaire->genero;
+        $peso = $questionnaire->peso;
+        $altura = $questionnaire->altura;
+        $edad = $questionnaire->edad;
+        $nivelActividad = $questionnaire->nivel_actividad;
+        $tipoTrabajo = $questionnaire->tipo_trabajo;
+        $horasDormidas = $questionnaire->horas_dormidas;
+        $nivelEstres = $questionnaire->nivel_estres;
+        $frecuenciaComidaProcesada = $questionnaire->frecuencia_comida_procesada;
+        $frecuenciaComidas = $questionnaire->frecuencia_comidas;
+        $consumoAlcohol = $questionnaire->consumo_alcohol;
+        $objetivo = $questionnaire->objetivo;
+
+        // Validación de datos críticos
+        if (is_null($genero) || is_null($peso) || is_null($altura) || is_null($edad)) {
+            return response()->json(['message' => 'Datos incompletos para realizar el cálculo'], 400);
+        }
+
+        $tmb = calcularTMB($genero, $peso, $altura, $edad);
+
+        // Ajustes por factores
+        $caloriasTotales = ajustarPorActividad($tmb, $nivelActividad);
+        $caloriasTotales = ajustarPorTrabajo($caloriasTotales, $tipoTrabajo);
+        $caloriasTotales = ajustarPorSuenoEstres($caloriasTotales, $horasDormidas, $nivelEstres);
+        $caloriasTotales = ajustarPorComidaProcesada($caloriasTotales, $frecuenciaComidaProcesada);
+        $caloriasTotales = ajustarPorFrecuenciaComidas($caloriasTotales, $frecuenciaComidas);
+        $caloriasTotales = ajustarPorAlcohol($caloriasTotales, $consumoAlcohol);
+
+        // Redondear el resultado final
+        $caloriasTotales = round($caloriasTotales, 2);
+
+        // Generar recomendaciones basadas en el objetivo
+        $recomendaciones = generarRecomendaciones($caloriasTotales, $objetivo);
+
+        // Depurar para verificar las recomendaciones generadas
+        if (empty($recomendaciones)) {
+            return response()->json([
+                'message' => 'No se generaron recomendaciones, revisa los datos',
+                'caloriasTotales' => $caloriasTotales,
+                'objetivo' => $objetivo,
+                '',
+
+            ], 400);
+        }
+
+        // Guardar resultado en la base de datos
+        $recomendacionesJSON = json_encode($recomendaciones);
+        $result = Result::create([
+            'resultados' => $caloriasTotales,
+            'genero' => $genero,
+            'peso' => $peso,
+            'altura' => $altura,
+            'edad' => $edad,
+            'nivel_actividad' => $nivelActividad,
+            'tipo_trabajo' => $tipoTrabajo,
+            'horas_dormidas' => $horasDormidas,
+            'nivel_estres' => $nivelEstres,
+            'frecuencia_comida_procesada' => $frecuenciaComidaProcesada,
+            'frecuencia_comidas' => $frecuenciaComidas,
+            'consumo_alcohol' => $consumoAlcohol,
+            'objetivo' => $objetivo,
+            'questionnaire_id' => $questionnaire->id,
             'user_id' => $user->id
         ]);
 
-        return response()->json([
-            'message' => 'Test guardado exitosamente',
-            //'data' => $test->toArray(),
-            'resultados' => $resultadoFinal
-        ], 201);
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+        if ($result) {
+            return response()->json([
+                'message' => 'Test guardado exitosamente',
+                'resultados' => $caloriasTotales,
+                'recomendaciones' => $recomendacionesJSON
+            ], 201);
+        } else {
+            return response()->json(['message' => 'Error al guardar el test'], 500);
+        }
+    }
+     
+
+    //crea
     public function store(Request $request)
     {
-        
+
         $validatedData = $request->validate([
-            'resultados'=> 'required',
+            'resultados' => 'required',
             'questionnaire_id' => 'required',
-            'user_id'=> 'required'
-            ]);
+            'user_id' => 'required'
+        ]);
 
         $validatedData = Result::create($request->all());
         return response()->json($validatedData);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
+    //muestra informacion por id
     public function show(string $id)
     {
         $result = Result::included()->findOrFail($id);
         return response()->json($result);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
+    //actualiza
     public function update(Request $request, Result $result)
     {
         $request->validate([
-            'resultados'=> 'required',
+            'resultados' => 'required',
             'questionnaire_id' => 'required',
-            'user_id'=> 'required'
-            ]);
+            'user_id' => 'required'
+        ]);
 
         $result->update($request->all());
 
         return response()->json($result);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
+    //elimina
     public function destroy(Result $result)
     {
         $result->delete();

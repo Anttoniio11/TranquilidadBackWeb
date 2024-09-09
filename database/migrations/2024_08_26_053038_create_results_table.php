@@ -13,7 +13,20 @@ return new class extends Migration
     {
         Schema::create('results', function (Blueprint $table) {
             $table->id();
-            $table->integer('resultados');
+            $table->text('resultados');
+            $table->string('genero');
+            $table->float('peso');
+            $table->float('altura');
+            $table->integer('edad');
+            $table->string('nivel_actividad');
+            $table->string('tipo_trabajo');
+            $table->integer('horas_dormidas');
+            $table->string('nivel_estres');
+            $table->string('frecuencia_comida_procesada');
+            $table->integer('frecuencia_comidas');
+            $table->string('consumo_alcohol');    
+          //  $table->string('condicion_medica')->nullable();
+            $table->string('objetivo');
 
             //foreign of questionnaire
             $table->unsignedBigInteger('questionnaire_id');

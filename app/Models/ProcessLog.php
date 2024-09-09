@@ -15,7 +15,7 @@ class ProcessLog extends Model
         'forum_id',
     ];
 
-    protected $allowIncluded = ['forum', 'personalGoals'];
+    protected $allowIncluded = ['personalGoals'];
 
     protected $allowFilter = ['id', 'registrationDate', 'forum_id']; 
 

@@ -9,11 +9,25 @@ class Questionnaire extends Model
 {
     use HasFactory;
 
-    public function results (){
+    protected $fillable = [
+        'genero',
+        'peso',
+        'altura',
+        'edad',
+        'nivel_actividad',
+        'tipo_trabajo',
+        'horas_dormidas',
+        'nivel_estres',
+        'frecuencia_comida_procesada',
+        'frecuencia_comidas',
+        'consumo_alcohol',
+        'objetivo',
+        'condicion_medica'
+    ];
+
+    //relacion uno a muchos con result
+    public function results()
+    {
         return $this->hasMany(Result::class);
     }
-
-    protected $fillable = ['sexo','edad','peso','altura','actividad_fisica','objetivo','trabajo','sueño','estres','comida_rapida','frecuencia_comidas','alcohol','condicion_medica','frutas_verduras','energia'];
-
-
 }

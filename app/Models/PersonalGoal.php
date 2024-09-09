@@ -12,24 +12,45 @@ class PersonalGoal extends Model
 
     protected $fillable = [
         'description',
-        'healthPlan_id',
-        'processLog_id',
+        'target_value',
+        'current_value',
+        'unit',
+        'start_date',
+        'end_date',
+        'status',
+        'processLog_id'
     ];
 
-    protected $allowIncluded = ['healthPlan', 'processLog']; 
+    protected $allowIncluded = [
+        'processLog'
+    ]; 
 
-    protected $allowFilter = ['id', 'description', 'healthPlan_id', 'processLog_id']; 
+    protected $allowFilter = [
+        'id', 
+        'description',
+        'target_value',
+        'current_value',
+        'unit',
+        'start_date',
+        'end_date',
+        'status',
+        'processLog_id'
+    ]; 
 
-    protected $allowSort = ['id', 'description', 'created_at']; 
+    protected $allowSort = [
+        'id', 
+        'description',
+        'status', 
+        'created_at'
+    ]; 
 
 
-    // Relación con HealthPlan
-    public function healthPlan()
-    {
-        return $this->belongsTo(HealthPlan::class, 'healthPlan_id');
+    //relacion de uno a muchos con recommendation
+    public function recomendations(){
+        return $this->hasMany(Recommendation::class);
     }
 
-    // Relación con ProcessLog
+    // recibe relacion uno a muchos con processLog
     public function processLog()
     {
         return $this->belongsTo(ProcessLog::class, 'processLog_id');

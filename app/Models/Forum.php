@@ -23,7 +23,7 @@ class Forum extends Model
     protected $allowSort = ['id', 'resourceType', 'publicationDate', 'created_at'];
 
 
-    // Relación uno a muchos con ProcessLog
+    // relacion uno a muchos con processLog
     public function processLogs()
     {
         return $this->hasMany(ProcessLog::class);

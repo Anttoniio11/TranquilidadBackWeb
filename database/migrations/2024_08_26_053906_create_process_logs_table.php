@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('health_plans', function (Blueprint $table) {
+        Schema::create('process_logs', function (Blueprint $table) {
             $table->id();
-            $table->integer('pesoKg');
-            $table->integer('pesoDeseadoKg');
-            $table->string('comidaHabitual');
-            $table->string('alturaCm');
-            $table->string('tipoMetabolismo');
+            $table->timestamp('registrationDate');
+
+            //foreign of forums
+            $table->unsignedBigInteger('forum_id');
+            $table->foreign('forum_id')->references('id')->on('forums')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('health_plans');
+        Schema::dropIfExists('process_logs');
     }
 };

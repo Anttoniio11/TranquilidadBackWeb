@@ -13,25 +13,25 @@ class Recommendation extends Model
     protected $fillable = [
         'information',
         'result_id',
+        //'personalGoal_id'
     ];
 
-    protected $allowIncluded = ['result', 'healthPlans'];
+    protected $allowIncluded = ['result', 'personalGoal'];
 
-    protected $allowFilter = ['id', 'information', 'result_id']; 
+    protected $allowFilter = ['id', 'information', 'result_id', 'personalGoal_id']; 
 
     protected $allowSort = ['id', 'information', 'created_at'];
 
 
-    // Relación con Result
+    // recibe relacion uno a muchos de result
     public function result()
     {
         return $this->belongsTo(Result::class, 'result_id');
     }
 
-    // Relación con HealthPlan
-    public function healthPlans()
-    {
-        return $this->hasMany(HealthPlan::class, 'recommendation_id');
+    //recibe relacion uno a muchos de personalGoal
+    public function personalGoal(){
+        return $this->belongsTo(PersonalGoal::class,'personalGoal_id');
     }
     
 

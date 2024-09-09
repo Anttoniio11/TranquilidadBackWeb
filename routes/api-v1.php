@@ -50,13 +50,6 @@ Route::delete('forums/{id}', [ForumController::class, 'destroy'])->name('api.v1.
   Route::put('resultados/{info}', [QuestionnaireController::class,'update'])->name('api.v1.resultados.update');
   Route::delete('resultados/{info}', [QuestionnaireController::class,'destroy'])->name('api.v1.questionnaire.delete');
 
-//rutas para healthP
-
-Route::get('health-plans', [HealthPlanController::class, 'index'])->name('api.v1.healthPlans.index');
-Route::post('health-plans', [HealthPlanController::class, 'store'])->name('api.v1.healthPlans.store');
-Route::get('health-plans/{id}', [HealthPlanController::class, 'show'])->name('api.v1.healthPlans.show');
-Route::put('health-plans/{id}', [HealthPlanController::class, 'update'])->name('api.v1.healthPlans.update');
-Route::delete('health-plans/{id}', [HealthPlanController::class, 'destroy'])->name('api.v1.healthPlans.destroy');
 
 //rutas personalGoal
 
@@ -78,6 +71,7 @@ Route::delete('process-logs/{id}', [ProcessLogController::class, 'destroy'])->na
 
 Route::get('recommendations', [RecommendationController::class, 'index'])->name('api.v1.recommendations.index');
 Route::post('recommendations', [RecommendationController::class, 'store'])->name('api.v1.recommendations.store');
+Route::post('recommendations/{idR}', [RecommendationController::class, 'create'])->name('api.v1.recommendations.store');
 Route::get('recommendations/{id}', [RecommendationController::class, 'show'])->name('api.v1.recommendations.show');
 Route::put('recommendations/{id}', [RecommendationController::class, 'update'])->name('api.v1.recommendations.update');
 Route::delete('recommendations/{id}', [RecommendationController::class, 'destroy'])->name('api.v1.recommendations.destroy');

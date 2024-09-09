@@ -43,7 +43,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    //relacion uno a muchos user-result
+    //relacion uno a muchos con results
     public function results (){
         return $this->hasMany(Result::class);
     }
