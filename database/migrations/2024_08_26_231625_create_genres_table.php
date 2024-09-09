@@ -9,6 +9,8 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
+    //http://tranquilidad.test/v1/genres
     public function up(): void
     {
         Schema::create('genres', function (Blueprint $table) {

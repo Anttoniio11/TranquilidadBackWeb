@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+
 use App\Models\Genre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Support\Facades\DB;
+
 
 class GenreController extends Controller
 {
@@ -38,29 +42,42 @@ class GenreController extends Controller
     // Crear un nuevo género
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:genres',
-            'description' => 'nullable|string',
-            'image_file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        // Validar la solicitud
+    $request->validate([
+        'name' => 'required|string|max:255|unique:genres,name',
+        'description' => 'nullable|string',
+        'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        // Subir la imagen
+    // Manejar la carga del archivo de imagen
+    $imageFilePath = null;
+    if ($request->hasFile('image_file')) {
         $imageFile = $request->file('image_file');
-        $imageName = Str::random(10) . '.' . $imageFile->getClientOriginalExtension();
-        $imageFilePath = $imageFile->storeAs('images/genres', $imageName, 'public');
 
-        //$imageFilePath = $request->file('image_file')->store('images/genres', 'public');
+        if ($imageFile->isValid()) {
+            try {
+                // Subir la imagen a Cloudinary
+                $uploadedImage = Cloudinary::upload($imageFile->getRealPath(), [
+                    'folder' => 'genres/images',
+                    'public_id' => Str::random(10)
+                ]);
+                $imageFilePath = $uploadedImage->getSecurePath(); // Obtener la URL segura de la imagen
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Failed to upload image to Cloudinary: ' . $e->getMessage()], 400);
+            }
+        } else {
+            return response()->json(['error' => 'Invalid image file or file not valid'], 400);
+        }
+    }
 
-        // Crear el nuevo genre
-        $genre = Genre::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'image_path' => $imageFilePath, // Almacenar la ruta de la imagen
-        ]);
+    // Crear el nuevo género
+    $genre = Genre::create([
+        'name' => $request->name,
+        'description' => $request->description,
+        'image_path' => $imageFilePath, // Almacenar la URL de la imagen
+    ]);
 
-
-        //$genre = Genre::create($request->all());  //sin PNG
-        return response()->json($genre, 201);
+    return response()->json($genre, 201);
     }
 
 
@@ -89,39 +106,61 @@ class GenreController extends Controller
      */
 
     // Actualizar un género existente
-    public function update(Request $request, Genre $genre)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'sometimes|required|string|max:255|unique:genres,name,' . $genre->id, // Único excepto para el género actual
-            'description' => 'nullable|string',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+         // Validar la solicitud
+    $request->validate([
+        'name' => 'sometimes|required|string|max:255|unique:genres,name,',
+        'description' => 'sometimes|nullable|string',
+        'image_file' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        // Subir la nueva imagen si se proporciona
+    // Encontrar el género existente
+    $genre = Genre::findOrFail($id);
+
+    // Iniciar una transacción
+    DB::beginTransaction();
+
+    try {
+        // Manejar la carga del nuevo archivo de imagen si está presente
         if ($request->hasFile('image_file')) {
-            // Eliminar la imagen anterior si existe
-            if ($genre->image_path && Storage::disk('public')->exists($genre->image_path)) {
-                Storage::disk('public')->delete($genre->image_path);
+            // Eliminar la imagen anterior de Cloudinary si existe
+            if ($genre->image_path) {
+                $publicId = pathinfo(basename($genre->image_path), PATHINFO_FILENAME);
+                Cloudinary::destroy('genres/images/' . $publicId);
             }
 
-            // Subir la nueva imagen
+            // Subir la nueva imagen a Cloudinary
             $imageFile = $request->file('image_file');
-            $imageName = Str::random(10) . '.' . $imageFile->getClientOriginalExtension();
-            $imageFilePath = $imageFile->storeAs('images/genres', $imageName, 'public');
-            $genre->image_path = $imageFilePath;
+            if ($imageFile->isValid()) {
+                $uploadedImage = Cloudinary::upload($imageFile->getRealPath(), [
+                    'folder' => 'genres/images',
+                    'public_id' => Str::random(10)
+                ]);
+                $genre->image_path = $uploadedImage->getSecurePath(); // Actualizar la URL de la nueva imagen
+            } else {
+                throw new \Exception('Invalid image file');
+            }
         }
 
-        // Actualizar los otros datos del genero si se proporcionan
-        if ($request->has('name')) {
-            $genre->name = $request->name;
-        }
-        if ($request->has('description')) {
-            $genre->description = $request->description;  
-        }
+        // Actualizar los campos del género
+        $genre->name = $request->has('name') ? $request->name : $genre->name;
+        $genre->description = $request->has('description') ? $request->description : $genre->description;
 
-        $genre->save(); // Guardar los cambios
+        // Guardar los cambios en la base de datos
+        $genre->save();
 
-        return response()->json($genre);
+        // Confirmar la transacción
+        DB::commit();
+
+        return response()->json($genre, 200);
+
+    } catch (\Exception $e) {
+        // Revertir la transacción en caso de error
+        DB::rollBack();
+
+        return response()->json(['error' => 'Failed to update genre: ' . $e->getMessage()], 400);
+    }
     }
 
 
@@ -137,12 +176,32 @@ class GenreController extends Controller
     // Eliminar un género
     public function destroy(Genre $genre)
     {
-        // Eliminar la imagen del almacenamiento si existe
-        if ($genre->image_path && Storage::disk('public')->exists($genre->image_path)) {
-            Storage::disk('public')->delete($genre->image_path);
+        // Iniciar una transacción
+    DB::beginTransaction();
+
+    try {
+        // Encontrar el género existente
+        $genre = Genre::findOrFail($id);
+
+        // Eliminar la imagen en Cloudinary si existe
+        if ($genre->image_path) {
+            $publicId = pathinfo(basename($genre->image_path), PATHINFO_FILENAME);
+            Cloudinary::destroy('genres/images/' . $publicId);
         }
 
+        // Eliminar el registro del género de la base de datos
         $genre->delete();
-        return response()->json(['message' => 'Género eliminado exitosamente']);
+
+        // Confirmar la transacción
+        DB::commit();
+
+        return response()->json(['message' => 'Genre and associated image successfully deleted.'], 200);
+
+    } catch (\Exception $e) {
+        // Revertir la transacción en caso de error
+        DB::rollBack();
+
+        return response()->json(['error' => 'Failed to delete genre and associated image: ' . $e->getMessage()], 400);
+    }
     }
 }
