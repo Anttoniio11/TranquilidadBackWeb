@@ -3,6 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\arteTerapia\Drawing;
+use App\Models\arteTerapia\Gallery;
+use App\Models\arteTerapia\Painting;
+use App\Models\arteTerapia\Publication;
+use App\Models\arteTerapia\Reaction;
+use App\Models\arteTerapia\Shared;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
