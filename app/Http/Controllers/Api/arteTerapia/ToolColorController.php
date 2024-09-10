@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\arteTerapia;
 
 use App\Http\Controllers\Controller;
-use App\Models\ToolColor;
+use App\Models\arteTerapia\ToolColor;
 use Illuminate\Http\Request;
 
 class ToolColorController extends Controller

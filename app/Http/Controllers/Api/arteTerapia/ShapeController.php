@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\arteTerapia;
+
 use App\Http\Controllers\Controller;
-use App\Models\Shape;
+use App\Models\arteTerapia\Shape;
 use Illuminate\Http\Request;
 
 class ShapeController extends Controller

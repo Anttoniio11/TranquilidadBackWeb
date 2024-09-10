@@ -1,39 +1,25 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\arteTerapia;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Painting extends Model
+class Template extends Model
 {
     use HasFactory;
 
-    protected $fillable=[
-        'user_id',
-        'gallery_id',
-        'template_id',
-        'painting_name',
-        'painting_url'    
-    ];
-    protected $allowIncluded=['user'];
+    protected $fillable=['category_id','template_name','template_url'];
+    protected $allowIncluded=['category'];
 
-     public function user(){
-        return $this->belongsTo(User::class);
+    public function category(){
+        return $this->belongsTo(Category::class);
     }
 
-    public function template(){
-        return $this->belongsTo(Template::class);
-    }
-
-    public function gallery(){
-        return $this->belongsTo(Gallery::class);
-    }
-
-/*     public function canvasPaintings(){
-        return $this->hasMany(CanvasPainting::class);
-    }  */
+    public function painting(){
+        return $this->hasOne(Painting::class);
+    } 
 
     //
 

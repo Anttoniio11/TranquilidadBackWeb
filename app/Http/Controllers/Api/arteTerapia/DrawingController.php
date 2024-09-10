@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\arteTerapia;
 use App\Http\Controllers\Controller;
-use App\Models\Drawing;
+use App\Models\arteTerapia\Drawing;
 use Illuminate\Http\Request;
 
 class DrawingController extends Controller

@@ -2,16 +2,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\CarpetaController;
-use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\DrawingController;
-use App\Http\Controllers\Api\GalleryController;
-use App\Http\Controllers\Api\PaintingController;
-use App\Http\Controllers\Api\PincelController;
-use App\Http\Controllers\Api\PublicationController;
-use App\Http\Controllers\Api\ReactionController;
-use App\Http\Controllers\Api\SharedController;
-use App\Http\Controllers\Api\TemplateController;
+use App\Http\Controllers\Api\arteTerapia\CategoryController;
+use App\Http\Controllers\Api\arteTerapia\TemplateController;
+use App\Http\Controllers\Api\arteTerapia\PaintingController;
+use App\Http\Controllers\Api\arteTerapia\DrawingController;
+use App\Http\Controllers\Api\arteTerapia\GalleryController;
+use App\Http\Controllers\Api\arteTerapia\PublicationController;
 
 /*
 |--------------------------------------------------------------------------

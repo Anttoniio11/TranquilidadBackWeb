@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\arteTerapia;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Brush;
+use App\Models\arteTerapia\Brush;
 
 class BrushController extends Controller
 {

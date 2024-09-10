@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\arteTerapia;
 
 use App\Http\Controllers\Controller;
-use App\Models\Publication;
+use App\Models\arteTerapia\Publication;
 use Illuminate\Http\Request;
 
 class PublicationController extends Controller

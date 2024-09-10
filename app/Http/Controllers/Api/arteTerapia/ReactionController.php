@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\arteTerapia;
 
 use App\Http\Controllers\Controller;
-use App\Models\Reaction;
+use App\Models\arteTerapia\Reaction;
 use Illuminate\Http\Request;
 
 class ReactionController extends Controller

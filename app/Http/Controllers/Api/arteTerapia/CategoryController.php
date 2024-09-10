@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\arteTerapia;
 use App\Http\Controllers\Controller;
-use App\Models\Category;
+use App\Models\arteTerapia\Category;
 use Illuminate\Http\Request;
 
 
@@ -11,8 +11,8 @@ class CategoryController extends Controller
     //
     public function index()
     {
-        $category=Category::all();
-        //$category = Category::included()->get();
+        //$category=Category::all();
+        $category = Category::included()->get();
         //$category=Category::included()->filter();
         //$category=Category::included()->filter()->sort()->get();
         //$category=Category::included()->filter()->sort()->getOrPaginate();

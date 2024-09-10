@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\arteTerapia;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
-class Reaction extends Model
+class Shared extends Model
 {
     use HasFactory;
 
-    protected $fillable=['user_id','publicacion_id','tipo_reaccion'];
-
+    
     public function user(){
         return $this->belongsTo(User::class);
     }

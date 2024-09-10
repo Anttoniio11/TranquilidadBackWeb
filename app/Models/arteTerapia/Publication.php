@@ -1,30 +1,36 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\arteTerapia;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
-class Drawing extends Model
+class Publication extends Model
 {
     use HasFactory;
 
-    protected $fillable=['user_id','gallery_id','drawing_name','drawing_url'];
-    protected $allowIncluded=['user','gallery'];
+    protected $fillable=[
+        'user_id',
+        'publication_description',
+        'publication_url',
+        'reaction_count',
+        'shared_count'];
 
-    public function user(){
+    protected $allowIncluded=['user'];
+
+     public function user(){
         return $this->belongsTo(User::class);
     }
 
-    public function gallery(){
-        return $this->belongsTo(Gallery::class);
+    public function shareds(){
+        return $this->hasMany(Shared::class);
     }
 
-/*     public function canvasDrawing(){
-        return $this->hasMany(CanvasDrawing::class);
-    }  */
+    public function reactions(){
+        return $this->hasMany(Reaction::class);
+    } 
 
     //
 
@@ -55,4 +61,3 @@ class Drawing extends Model
 
     }
 }
-
