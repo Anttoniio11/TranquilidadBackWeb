@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\arteTerapia;
 use App\Http\Controllers\Controller;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
 use App\Models\arteTerapia\Drawing;
 use Illuminate\Http\Request;
 

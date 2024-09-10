@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\arteTerapia;
 use App\Http\Controllers\Controller;
 use App\Models\arteTerapia\ToolColor;
 use Illuminate\Http\Request;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class ToolColorController extends Controller
 {

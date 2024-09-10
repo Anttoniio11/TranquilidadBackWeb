@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\arteTerapia;
-
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use App\Http\Controllers\Controller;
 use App\Models\arteTerapia\Gallery;
 use Illuminate\Http\Request;
