@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class ResourceController extends Controller
 {
@@ -40,10 +41,22 @@ class ResourceController extends Controller
             'nombre' => 'required|string',
             'descripcion' => 'required|string',
             'professional_id' => 'required|exists:professionals,id',
-            'patient_id' => 'required|exists:patients,id'
+            'patient_id' => 'required|exists:patients,id',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,png|max:2048' // Validaciones del archivo
         ]);
 
-        $resource = Resource::create($request->all());
+        $data = $request->only(['nombre', 'descripcion', 'professional_id', 'patient_id']);
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $uploadedFile = Cloudinary::upload($file->getRealPath(), [
+                'folder' => 'resources',
+                'resource_type' => 'auto' // Permite subir diferentes tipos de archivos
+            ]);
+            $data['file_url'] = $uploadedFile->getSecurePath();
+        }
+
+        $resource = Resource::create($data);
 
         return response()->json($resource, Response::HTTP_CREATED);
     }
@@ -61,10 +74,28 @@ class ResourceController extends Controller
             'nombre' => 'nullable|string',
             'descripcion' => 'nullable|string',
             'professional_id' => 'nullable|exists:professionals,id',
-            'patient_id' => 'nullable|exists:patients,id'
+            'patient_id' => 'nullable|exists:patients,id',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,png|max:2048' // Validaciones del archivo
         ]);
 
-        $resource->update($request->all());
+        $data = $request->only(['nombre', 'descripcion', 'professional_id', 'patient_id']);
+
+        if ($request->hasFile('file')) {
+            // Elimina el archivo anterior si existe
+            if ($resource->file_url) {
+                $publicId = basename(parse_url($resource->file_url, PHP_URL_PATH));
+                Cloudinary::destroy($publicId);
+            }
+
+            $file = $request->file('file');
+            $uploadedFile = Cloudinary::upload($file->getRealPath(), [
+                'folder' => 'resources',
+                'resource_type' => 'auto' // Permite subir diferentes tipos de archivos
+            ]);
+            $data['file_url'] = $uploadedFile->getSecurePath();
+        }
+
+        $resource->update($data);
 
         return response()->json($resource);
     }
@@ -76,6 +107,12 @@ class ResourceController extends Controller
 
         if (!$resource) {
             return response()->json(['message' => 'Resource not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Elimina el archivo de Cloudinary si existe
+        if ($resource->file_url) {
+            $publicId = basename(parse_url($resource->file_url, PHP_URL_PATH));
+            Cloudinary::destroy($publicId);
         }
 
         $resource->delete();

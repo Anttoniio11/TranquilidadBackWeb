@@ -15,7 +15,8 @@ class Resource extends Model
         'nombre', 
         'descripcion', 
         'professional_id', 
-        'patient_id'
+        'patient_id',
+         'file_url'
     ];
 
     // Relaciones permitidas para incluir

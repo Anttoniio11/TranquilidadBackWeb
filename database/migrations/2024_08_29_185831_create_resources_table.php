@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->string('nombre');
             $table->string('descripcion');
+            $table->string('file_url')->nullable();
 
             $table->unsignedBigInteger('professional_id');
             $table->foreign('professional_id')->references('id')->on('professionals')->onDelete('cascade');
@@ -33,5 +34,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('resources');
+
+        Schema::table('resources', function (Blueprint $table) {
+            $table->dropColumn('file_url'); // Eliminado en caso de rollback
+        });
     }
 };
