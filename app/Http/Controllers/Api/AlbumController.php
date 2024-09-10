@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Album;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+
 use Illuminate\Support\Str;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
@@ -68,7 +68,10 @@ class AlbumController extends Controller
 
     public function show($id)
     {
-        $album = Album::included()->findOrFail($id);
+        $album = Album::included()
+            ->filter()
+            ->sort()
+            ->findOrFail($id);
         return $album;
     }
 

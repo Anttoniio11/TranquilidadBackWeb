@@ -105,10 +105,14 @@ class AudioController extends Controller
         return response()->json($audio, 201);
     }
 
-    // Mostrar un audio específico
+   
     public function show($id)
     {
-        $audio = Audio::findOrFail($id);
+        // Buscamos el audio por ID e incluimos las relaciones 
+        $audio = Audio::with(['genre', 'album','tags','likes','histories','playlists'])  
+            ->findOrFail($id);           // Devolvemos el audio o lanzamos un 404 si no se encuentra
+
+        // Retornamos la respuesta en formato JSON con el audio y sus relaciones
         return response()->json($audio);
     }
 
@@ -186,29 +190,28 @@ class AudioController extends Controller
             }
         }
         // Preparar los datos para actualizar
-    $dataToUpdate = $request->only([
-        'title', 
-        'description', 
-        'duration', 
-        'genre_id', 
-        'album_id', 
-        'es_binaural', 
-        'frecuencia'
-    ]);
+        $dataToUpdate = $request->only([
+            'title',
+            'description',
+            'duration',
+            'genre_id',
+            'album_id',
+            'es_binaural',
+            'frecuencia'
+        ]);
 
-    if ($request->has('image_file')) {
-        $dataToUpdate['image_file'] = $imageFilePath;
-    }
+        if ($request->has('image_file')) {
+            $dataToUpdate['image_file'] = $imageFilePath;
+        }
 
-    if ($request->has('audio_file')) {
-        $dataToUpdate['audio_file'] = $audioFilePath;
-    }
+        if ($request->has('audio_file')) {
+            $dataToUpdate['audio_file'] = $audioFilePath;
+        }
 
-    // Actualizar el registro en la base de datos
-    $audio->update($dataToUpdate);
+        // Actualizar el registro en la base de datos
+        $audio->update($dataToUpdate);
 
-    return response()->json($audio, 200);
-
+        return response()->json($audio, 200);
     }
 
 
@@ -219,39 +222,36 @@ class AudioController extends Controller
     public function destroy($id)
     {
         // Iniciar una transacción
-    DB::beginTransaction();
+        DB::beginTransaction();
 
-    try {
-        // Encontrar el registro existente
-        $audio = Audio::findOrFail($id);
+        try {
+            // Encontrar el registro existente
+            $audio = Audio::findOrFail($id);
 
-        // Eliminar el archivo de imagen en Cloudinary si existe
-        if ($audio->image_file) {
-            $publicId = basename($audio->image_file, '.' . pathinfo($audio->image_file, PATHINFO_EXTENSION));
-            Cloudinary::destroy('images/' . $publicId);
+            // Eliminar el archivo de imagen en Cloudinary si existe
+            if ($audio->image_file) {
+                $publicId = basename($audio->image_file, '.' . pathinfo($audio->image_file, PATHINFO_EXTENSION));
+                Cloudinary::destroy('images/' . $publicId);
+            }
+
+            // Eliminar el archivo de audio en Cloudinary si existe
+            if ($audio->audio_file) {
+                $publicId = basename($audio->audio_file, '.' . pathinfo($audio->audio_file, PATHINFO_EXTENSION));
+                Cloudinary::destroy('audios/' . $publicId, ['resource_type' => 'video']);
+            }
+
+            // Eliminar el registro de la base de datos
+            $audio->delete();
+
+            // Confirmar la transacción
+            DB::commit();
+
+            return response()->json(['message' => 'Audio and associated files successfully deleted.'], 200);
+        } catch (\Exception $e) {
+            // Revertir la transacción
+            DB::rollBack();
+
+            return response()->json(['error' => 'Failed to delete audio and associated files: ' . $e->getMessage()], 400);
         }
-
-        // Eliminar el archivo de audio en Cloudinary si existe
-        if ($audio->audio_file) {
-            $publicId = basename($audio->audio_file, '.' . pathinfo($audio->audio_file, PATHINFO_EXTENSION));
-            Cloudinary::destroy('audios/' . $publicId, ['resource_type' => 'video']);
-        }
-
-        // Eliminar el registro de la base de datos
-        $audio->delete();
-
-        // Confirmar la transacción
-        DB::commit();
-
-        return response()->json(['message' => 'Audio and associated files successfully deleted.'], 200);
-
-    } catch (\Exception $e) {
-        // Revertir la transacción
-        DB::rollBack();
-
-        return response()->json(['error' => 'Failed to delete audio and associated files: ' . $e->getMessage()], 400);
-    }
-
-    
     }
 }

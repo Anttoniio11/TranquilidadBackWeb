@@ -91,7 +91,8 @@ class GenreController extends Controller
     // Mostrar un género específico
     public function show($id)
     {
-        $genre = Genre::included()->findOrFail($id);
+        $genre = Genre::included()
+            ->findOrFail($id);
         return $genre;
     }
 
