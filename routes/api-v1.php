@@ -43,7 +43,3 @@ Route::get('usuarios/{id}', [UserController::class, 'show']); // Mostrar un usua
 Route::put('usuarios/{id}', [UserController::class, 'update']); // Actualizar un usuario
 Route::delete('usuarios/{id}', [UserController::class, 'destroy']); // Eliminar un usuario
 
-// // Rutas para Perfiles
-// Route::get('perfiles/{id}', [PerfilController::class, 'show']); // Mostrar un perfil específico por ID de usuario
-// Route::put('perfiles/{id}', [PerfilController::class, 'update']); // Actualizar un perfil
-// Route::delete('perfiles/{id}', [PerfilController::class, 'destroy']); // Eliminar un perfil
