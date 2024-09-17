@@ -32,7 +32,6 @@ class CategoryController extends Controller
         $request->validate([
             'category_name' => 'required|max:255',
             
-
         ]);
 
         $category = Category::create($request->all());
@@ -50,6 +49,7 @@ class CategoryController extends Controller
     {  
         
         $category = Category::included()->findOrFail($id);
+        
         return response()->json($category);
         //http://tranquilidad.test/v1/categories/1/?included=plantilla
         
@@ -66,8 +66,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $request->validate([
-            'category_name' => 'required|max:255' . $category->id,
-
+            'category_name' => 'required|max:255',
         ]);
 
         $category->update($request->all());

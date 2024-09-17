@@ -10,7 +10,12 @@ class Template extends Model
 {
     use HasFactory;
 
-    protected $fillable=['category_id','template_name','template_url'];
+    protected $fillable = [
+        'category_id',
+        'template_name',
+        'template_url'
+    ];
+    
     protected $allowIncluded=['category'];
 
     public function category(){
