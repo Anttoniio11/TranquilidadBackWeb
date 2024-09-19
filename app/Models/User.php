@@ -47,4 +47,9 @@ class User extends Authenticatable
     public function results (){
         return $this->hasMany(Result::class);
     }
+
+    //relacion uno a muchos con questionnaires
+    public function questionaires (){
+        return $this->hasMany(Questionnaire::class);
+    }
 }

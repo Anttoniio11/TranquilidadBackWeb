@@ -8,12 +8,21 @@ use App\Models\Result;
 use App\Models\Recommendation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Controllers\Api\ApiAlimentacion\ResultController;
-
+use App\Services\RecommendationsService;
+use App\Services\RecommendationsUpdateService;
 
 class RecommendationController extends Controller
 {
-    
+    //instancioamos una variable la cual tendra las dependencias del service 
+    protected $recommendationsUpadteService;
+    protected $recommendationsService;
+    public function __construct(RecommendationsService $recommendationsService,RecommendationsUpdateService $recommendationsUpadteService)
+    {
+        $this->recommendationsService = $recommendationsService;
+        $this->recommendationsUpadteService = $recommendationsUpadteService;
+    }
+    ///////////////////////////////////////////////////////////////////////////////
+
     // Mostrar todos
     public function index(Request $request)
     {
@@ -24,35 +33,7 @@ class RecommendationController extends Controller
     public function create($idR){
 
         $result = Result::find($idR);
-        //$goal = PersonalGoal::find($idPG);
 
-
-        generarRecomendaciones($caloriasTotales, $objetivo)
-        {
-            $recomendaciones = []
-
-            if ($objetivo === 'mantener peso') {
-                $recomendaciones[] = "Para mantener tu peso, deberías consumir aproximadamente $caloriasTotales calorías al día.";
-            } elseif ($objetivo === 'perder peso') {
-                $caloriasPerdida = $caloriasTotales * 0.85;
-                $recomendaciones[] = "Para perder peso, considera reducir tu ingesta calórica a $caloriasPerdida calorías diarias.";
-            } elseif ($objetivo === 'ganar peso') {
-                $caloriasGanar = $caloriasTotales * 1.15;
-                $recomendaciones[] = "Para ganar peso, deberías incrementar tu ingesta calórica a $caloriasGanar calorías diarias.";
-            }
-
-            if ($caloriasTotales > 3000) {
-                $recomendaciones[] = "Tu consumo calórico es alto. Considera equilibrar tus comidas con más alimentos frescos y evitar alimentos procesados.";
-            } elseif ($caloriasTotales < 1500) {
-                $recomendaciones[] = "Tu consumo calórico es bajo. Asegúrate de no saltarte comidas y de incluir proteínas suficientes en tu dieta.";
-            }
-
-            return $recomendaciones;
-            
-        }
-        
-
-        // Obtener los datos del cuestionario
         $genero = $result->genero;
         $peso = $result->peso;
         $altura = $result->altura;
@@ -66,59 +47,9 @@ class RecommendationController extends Controller
         $consumoAlcohol = $result->consumo_alcohol;
         $objetivo = $result->objetivo;
 
-        // Validación de datos críticos
-        if (is_null($genero) || is_null($peso) || is_null($altura) || is_null($edad)) {
-            return response()->json(['message' => 'Datos incompletos para realizar el cálculo'], 400);
-        }
+        $recomendacion = $this->recommendationsService->calcularRecomendaciones($idR,$genero,$peso,$altura,$edad,$nivelActividad,$tipoTrabajo,$horasDormidas,$nivelEstres,$frecuenciaComidaProcesada,$frecuenciaComidas,$consumoAlcohol,$objetivo);
 
-        $tmb = calcularTMB($genero, $peso, $altura, $edad);
-
-        // Ajustes por factores
-        $caloriasTotales = ajustarPorActividad($tmb, $nivelActividad);
-        $caloriasTotales = ajustarPorTrabajo($caloriasTotales, $tipoTrabajo);
-        $caloriasTotales = ajustarPorSuenoEstres($caloriasTotales, $horasDormidas, $nivelEstres);
-        $caloriasTotales = ajustarPorComidaProcesada($caloriasTotales, $frecuenciaComidaProcesada);
-        $caloriasTotales = ajustarPorFrecuenciaComidas($caloriasTotales, $frecuenciaComidas);
-        $caloriasTotales = ajustarPorAlcohol($caloriasTotales, $consumoAlcohol);
-
-        // Redondear el resultado final
-        $caloriasTotales = round($caloriasTotales, 2);
-
-        // Generar recomendaciones basadas en el objetivo
-        $recomendaciones = generarRecomendaciones($caloriasTotales, $objetivo);
-
-        // Depurar para verificar las recomendaciones generadas
-        if (empty($recomendaciones)) {
-            return response()->json([
-                'message' => 'No se generaron recomendaciones, revisa los datos',
-                'caloriasTotales' => $caloriasTotales,
-                'objetivo' => $objetivo,
-                '',
-
-            ], 400);
-        }
-
-        // Guardar resultado en la base de datos
-        $recomendacionesJSON = json_encode($recomendaciones);
-        $recommendation = Recommendation::create([
-            'information' => $recomendacionesJSON,
-            'result_id' => $result->id
-        ]);
-
-
-        if ($result) {
-            return response()->json([
-                'message' => 'Test guardado exitosamente',
-                'resultados' => $caloriasTotales,
-                'recomendaciones' => $recomendaciones
-            ], 201);
-        } else {
-            return response()->json(['message' => 'Error al guardar el test'], 500);
-        }
-
-
-
-
+        return $recomendacion;
     }
 
     // Crear
@@ -148,23 +79,17 @@ class RecommendationController extends Controller
     }
 
     // Actualizar
-    public function update(Request $request, $id)
+    public function update($idRE,$idR)
     {
-        $recommendation = Recommendation::find($id);
+        $result = Result::find( $idR );
+        $recommendation = Recommendation::find($idRE);
 
-        if (!$recommendation) {
-            return response()->json(['message' => 'Recommendation not found'], Response::HTTP_NOT_FOUND);
-        }
-
-        $request->validate([
-            'information' => 'string',
-            'result_id' => 'exists:results,id',
-        ]);
-
-        $recommendation->update($request->all());
-
-        return response()->json($recommendation);
+        if(!$result||!$recommendation) {
+        return response()->json(['message'=> 'results or recommendations not found'], Response::HTTP_NOT_FOUND);
     }
+    //falta completar actualizacion de recommendations 
+}
+
 
     // Eliminar
     public function destroy($id)
