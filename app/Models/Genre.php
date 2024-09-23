@@ -13,7 +13,7 @@ class Genre extends Model
     protected $guarded = [];
 
     //Listas Blancas
-    protected $allowIncluded= ['audios'];
+    protected $allowIncluded= ['audios','audios.album'];
     protected $allowFilter= ['id','name','description'];
     protected $allowSort= ['id','name'];
 

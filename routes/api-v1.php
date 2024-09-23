@@ -45,6 +45,8 @@ Route::apiResource('tags', TagController::class);
 
 // Rutas para Like
 Route::apiResource('likes', LikeController::class);
+Route::post('/likes', [LikeController::class, 'store']);
+Route::delete('/likes/{id}', [LikeController::class, 'destroy']);
 
 // Rutas para History
 Route::apiResource('histories', HistoryController::class);

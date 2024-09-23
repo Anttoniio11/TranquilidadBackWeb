@@ -30,7 +30,7 @@ class AlbumController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image_file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Manejar la carga del archivo de imagen
