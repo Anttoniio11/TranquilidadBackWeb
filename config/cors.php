@@ -15,20 +15,14 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'],
-
-    'allowed_origins' => ['*', 'http://127.0.0.1:5500'],
-
-    'allowed_origins_patterns' => [],
-
-    'allowed_headers' => ['*'],
-
-    'exposed_headers' => [],
-
-    'max_age' => 0,
-
-    'supports_credentials' => false,
+    'paths' => ['api/*', 'v1/*'],  // Solo las rutas relevantes
+    'allowed_methods' => ['*'],  // Permitir todos los métodos (GET, POST, PUT, DELETE, etc.)
+    'allowed_origins' => ['*'], 
+    'allowed_origins_patterns' => [],  // Si necesitas un patrón específico, agrégalo aquí
+    'allowed_headers' => ['*'],  // Permitir todos los encabezados
+    'exposed_headers' => [],  // Cabeceras que pueden ser visibles en el navegador
+    'max_age' => 0,  // Puedes cambiarlo para almacenar en caché las respuestas de preflight
+    'supports_credentials' => false,  // Mantener en false si no usas cookies o credenciales
 
 ];
