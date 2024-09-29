@@ -68,8 +68,8 @@ class CategoryController extends Controller
         $request->validate([
             'category_name' => 'required|max:255',
         ]);
-
-        $category->update($request->all());
+        
+        $category->update($request->only(['category_name']));
 
         return response()->json($category);
     }

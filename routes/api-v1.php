@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/', function () {
     return view('welcome');
 });
-
+//check category
 Route::controller(CategoryController::class)->group(function(){
     Route::post('categories', 'store')->name('api.v1.categories.store');
     Route::get('categories', 'index')->name('api.v1.categories.index');
@@ -36,12 +36,13 @@ Route::controller(CategoryController::class)->group(function(){
     Route::delete('categories/{category}', 'destroy')->name('api.v1.categories.delete');
 });
 
+
 Route::controller(TemplateController::class)->group(function(){
     Route::post('templates', 'store')->name('api.v1.templates.store');
     Route::get('templates', 'index')->name('api.v1.templates.index');
-    Route::get('templates/{template}', 'show')->name('api.v1.templates.show');
-    Route::put('templates/{template}', 'update')->name('api.v1.templates.update');
-    Route::delete('templates/{template}', 'destroy')->name('api.v1.templates.delete');
+    Route::get('templates/{id}', 'show')->name('api.v1.templates.show');
+    Route::put('templates/{id}', 'update')->name('api.v1.templates.update');
+    Route::delete('templates/{id}', 'destroy')->name('api.v1.templates.delete');
 });
 
 Route::controller(PaintingController::class)->group(function(){

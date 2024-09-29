@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api\arteTerapia;
 use App\Http\Controllers\Controller;
 use App\Models\arteTerapia\Template;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+use Illuminate\Support\Str;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-use GuzzleHttp\Psr7\Response;
+use Illuminate\Support\Facades\Log;
 
 class TemplateController extends Controller
 {
@@ -34,7 +37,6 @@ class TemplateController extends Controller
             'category_id'=> 'required|exists:categories,id',
             'template_name'=> 'required|max:100',
             'template' => 'nullable|file|mimes:jpg,png|max:2048'
-
         ]);
 
         $data = $request->only(['category_id', 'template_name']);
@@ -42,10 +44,12 @@ class TemplateController extends Controller
         if($request->hasFile('template')) {
             $template = $request->file('template');
             $uploadedFile = Cloudinary::upload($template->getRealPath(),[
-                'folder' => 'resources',
+                'folder' => 'resources/templates',
                 'resources_type' => 'auto'
             ]);
                 $data['template_url'] = $uploadedFile->getSecurePath();
+            } else {
+                $data['template_url']=null;
             }
 
         $Template = Template::create($data);
@@ -79,46 +83,51 @@ class TemplateController extends Controller
      * @param  \App\Models\Template  $Template
      * @return \Illuminate\Http\Response
      */
+
     public function update(Request $request, $id)
-{
-    // Buscar la plantilla por su ID
+    {
+    
     $template = Template::find($id);
-
-    // Verificar si la plantilla existe
+    
     if (!$template) {
-        return response()->json(['message' => 'Template not found']);
+        return response()->json(['message' => 'Template not found'], 404);
     }
-    // Validar los datos del request
-    $validatedData = $request->validate([
-        'category_id' => 'required|exists:categories,id',
-        'template_name' => 'required|string',
-        'template' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,png|max:2048',
+    // Validación de los datos
+    $request->validate([
+        'category_id' => 'nullable|exists:categories,id',
+        'template_name' => 'nullable|string|max:100',
+        'template' => 'nullable|file|mimes:jpg,png|max:2048' // Validación del archivo
     ]);
-    return 'hola';
+    //dd($request->all());
+    
+    // Capturar solo los campos que necesitamos
+    $data = $request->only(['category_id', 'template_name']);
+    //return response()->json($request->all());
 
-    // Manejar la carga de archivos con Cloudinary si se proporciona un archivo
-    if ($request->hasFile('template_url')) {
-        // Eliminar el archivo anterior si existe
+    if ($request->hasFile('template')) {
+        // Elimina el archivo anterior si existe
         if ($template->template_url) {
+            // Extrae el ID público del archivo actual
             $publicId = basename(parse_url($template->template_url, PHP_URL_PATH));
             Cloudinary::destroy($publicId);
         }
 
-        $file = $request->file('template_url');
+        // Sube el nuevo archivo a Cloudinary
+        $file = $request->file('template');
         $uploadedFile = Cloudinary::upload($file->getRealPath(), [
-            'folder' => 'templates',
-            'resource_type' => 'auto',
+            'folder' => 'resources/templates',
+            'resource_type' => 'auto' // Permite subir imágenes y otros tipos de archivos
         ]);
+        // Guarda la nueva URL del archivo
         $data['template_url'] = $uploadedFile->getSecurePath();
     }
 
-    // Actualizar la plantilla con los nuevos datos
+    // Actualiza los datos del template en la base de datos
     $template->update($data);
-
-    // Devolver la respuesta en formato JSON con la plantilla actualizada
+    
+    // Retorna el template actualizado
     return response()->json($template);
-}
-
+    }
 
 
     /**
