@@ -160,17 +160,16 @@ class ResultsService
             'frecuencia_comidas' => $frecuenciaComidas,
             'consumo_alcohol' => $consumoAlcohol,
             'objetivo' => $objetivo,
+            'recomendaciones'  => $recomendaciones,
             'questionnaire_id' => $idQ,
-            'user_id' => $idU
+            'user_id' => $idU            
         ]);
-
-
-
 
         if ($result) {
             return response()->json([
                 'message' => 'Test guardado exitosamente',
                 'resultados' => $caloriasTotales,
+                'recomendaciones' => $recomendaciones
             ], 201);
         } else {
             return response()->json(['message' => 'Error al guardar el test'], 500);

@@ -120,9 +120,9 @@ class Result extends Model
         return $this->belongsTo(Questionnaire::class,'questionnaire_id');
     }
 
-    //relacion uno a muchos con recommendation
-    public function recommendations (){
-        return $this->hasMany(Recommendation::class);
+    //recibe relacion de uno a muchos de personal goal
+    public function personagoal (){
+        return $this->belongsTo(PersonalGoal::class);
     }
 
     

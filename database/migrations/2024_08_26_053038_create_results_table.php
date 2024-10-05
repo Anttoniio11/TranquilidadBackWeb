@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('consumo_alcohol');    
           //  $table->string('condicion_medica')->nullable();
             $table->string('objetivo');
+            $table->string('recomendacion');
 
             //foreign of questionnaire
             $table->unsignedBigInteger('questionnaire_id');

@@ -45,10 +45,11 @@ class PersonalGoal extends Model
     ]; 
 
 
-    //relacion de uno a muchos con recommendation
-    public function recomendations(){
-        return $this->hasMany(Recommendation::class);
+    //relacion de uno a muchos con result
+    public function results(){
+        return $this->hasMany(Result::class);
     }
+    
 
     // recibe relacion uno a muchos con processLog
     public function processLog()

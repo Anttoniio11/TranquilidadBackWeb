@@ -41,14 +41,6 @@ Route::get('resultados/{id}', [ResultController::class, 'show'])->name('api.v1.r
 Route::put('resultados/{idU}/{idQ}/{idR}', [ResultController::class, 'update'])->name('api.v1.result.update');
 Route::delete('resultados/{info}', [ResultController::class, 'destroy'])->name('api.v1.result.delete');
 
-//rutas para recomendation
-Route::get('recommendations', [RecommendationController::class, 'index'])->name('api.v1.recommendations.index');
-Route::post('recommendations', [RecommendationController::class, 'store'])->name('api.v1.recommendations.store');
-Route::post('recommendations/{idR}', [RecommendationController::class, 'create'])->name('api.v1.recommendations.store');
-Route::get('recommendations/{id}', [RecommendationController::class, 'show'])->name('api.v1.recommendations.show');
-Route::put('recommendations/{id}', [RecommendationController::class, 'update'])->name('api.v1.recommendations.update');
-Route::delete('recommendations/{id}', [RecommendationController::class, 'destroy'])->name('api.v1.recommendations.destroy');
-
 //rutas foro
 Route::get('forums', [ForumController::class, 'index'])->name('api.v1.forums.index');
 Route::post('forums', [ForumController::class, 'store'])->name('api.v1.forums.store');
@@ -70,11 +62,3 @@ Route::get('process-logs/{id}', [ProcessLogController::class, 'show'])->name('ap
 Route::put('process-logs/{id}', [ProcessLogController::class, 'update'])->name('api.v1.processLogs.update');
 Route::delete('process-logs/{id}', [ProcessLogController::class, 'destroy'])->name('api.v1.processLogs.destroy');
 
-//rutas para recomendation
-
-Route::get('recommendations', [RecommendationController::class, 'index'])->name('api.v1.recommendations.index');
-Route::post('recommendations', [RecommendationController::class, 'store'])->name('api.v1.recommendations.store');
-Route::post('recommendations/{idR}', [RecommendationController::class, 'create'])->name('api.v1.recommendations.store');
-Route::get('recommendations/{id}', [RecommendationController::class, 'show'])->name('api.v1.recommendations.show');
-Route::put('recommendations/{id}', [RecommendationController::class, 'update'])->name('api.v1.recommendations.update');
-Route::delete('recommendations/{id}', [RecommendationController::class, 'destroy'])->name('api.v1.recommendations.destroy');
