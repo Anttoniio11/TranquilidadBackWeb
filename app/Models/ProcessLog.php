@@ -10,6 +10,18 @@ class ProcessLog extends Model
 {
     use HasFactory;
 
+    // relacion de uno a muchos con forum
+    public function forum()
+    {
+        return $this->hasMany(Forum::class);
+    }
+
+    // recibe relacion de uno a muchos con personal goal
+    public function personalGoals()
+    {
+        return $this->hasMany(PersonalGoal::class, 'processLog_id');
+    }
+
     protected $fillable = [
         'registrationDate',
         'forum_id',
@@ -20,19 +32,6 @@ class ProcessLog extends Model
     protected $allowFilter = ['id', 'registrationDate', 'forum_id']; 
 
     protected $allowSort = ['id', 'registrationDate', 'created_at'];
-
-
-    // Relación con Forum
-    public function forum()
-    {
-        return $this->belongsTo(Forum::class, 'forum_id');
-    }
-
-    // Relación con PersonalGoal
-    public function personalGoals()
-    {
-        return $this->hasMany(PersonalGoal::class, 'processLog_id');
-    }
 
     
     // Scope para incluir relaciones

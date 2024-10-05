@@ -43,13 +43,23 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    //relacion uno a muchos con results
+    //relacion de uno a muchos con result
     public function results (){
         return $this->hasMany(Result::class);
     }
 
-    //relacion uno a muchos con questionnaires
+    //relacion de  uno a muchos con questionnaire
     public function questionaires (){
         return $this->hasMany(Questionnaire::class);
+    }
+
+    //relacion de uno a muchos con personal goal
+    public function personalGoals (){
+        return $this->hasMany(PersonalGoal::class,); 
+    }
+
+    //relacion de muchos a muchos con forum
+    public function forums (){
+        return $this->belongsToMany(Forum::class);    
     }
 }

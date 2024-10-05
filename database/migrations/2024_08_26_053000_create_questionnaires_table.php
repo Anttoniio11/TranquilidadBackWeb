@@ -27,6 +27,9 @@ return new class extends Migration
             //$table->string('condicion_medica')->nullable();
             $table->enum('objetivo', ['mantener peso', 'perder peso', 'ganar peso']);
             $table->timestamps();
+
+            //foranea de user
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
         });
 
     }

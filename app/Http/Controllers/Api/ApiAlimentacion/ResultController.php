@@ -117,8 +117,9 @@ class ResultController extends Controller
 
 
     //elimina
-    public function destroy(Result $result)
+    public function destroy($id)
     {
+        $result = Result::find($id);
         $result->delete();
         return response()->json();
     }

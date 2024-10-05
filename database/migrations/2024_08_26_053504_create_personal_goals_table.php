@@ -21,9 +21,11 @@ return new class extends Migration
             $table->date('end_date');
             $table->enum('status', ['in progress', 'completed', 'abandoned'])->default('in progress');
 
-            //foreign of registration
-            $table->unsignedBigInteger('process_log_id');
-            $table->foreign('process_log_id')->references('id')->on('process_logs')->onDelete('cascade');
+            //foranea de result
+            $table->foreignId('result_id')->constrained()->onDelete('cascade');
+
+            //foranea de user
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
             $table->timestamps();
         });

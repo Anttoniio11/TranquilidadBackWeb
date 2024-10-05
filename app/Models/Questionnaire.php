@@ -10,6 +10,16 @@ class Questionnaire extends Model
 {
     use HasFactory;
 
+    //relacion de uno a muchos con result
+    public function results(){
+        return $this->hasMany(Result::class);
+    }
+    
+    //recibe relacion de unos a muchos con user
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
     protected $fillable = [
         'genero',
         'peso',
@@ -48,9 +58,4 @@ class Questionnaire extends Model
         $query->with($relations);
     }
 
-    //relacion uno a muchos con result
-    public function results()
-    {
-        return $this->hasMany(Result::class);
-    }
 }

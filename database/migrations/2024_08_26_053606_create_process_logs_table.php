@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('process_logs', function (Blueprint $table) {
             $table->id();
+            $table->string('description'); 
             $table->timestamp('registrationDate');
 
-            //foreign of forums
-            $table->unsignedBigInteger('forum_id');
-            $table->foreign('forum_id')->references('id')->on('forums')->onDelete('cascade');
 
+            //foranea de personal goal
+            $table->foreignId('personal_goal_id')->constrained()->onDelete('cascade');
+            
             $table->timestamps();
         });
     }

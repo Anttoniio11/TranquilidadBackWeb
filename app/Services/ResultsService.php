@@ -160,7 +160,7 @@ class ResultsService
             'frecuencia_comidas' => $frecuenciaComidas,
             'consumo_alcohol' => $consumoAlcohol,
             'objetivo' => $objetivo,
-            'recomendaciones'  => $recomendaciones,
+            'recomendacion'  => $recomendacionesJSON,
             'questionnaire_id' => $idQ,
             'user_id' => $idU            
         ]);

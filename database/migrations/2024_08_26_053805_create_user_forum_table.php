@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('forums', function (Blueprint $table) {
+        Schema::create('user_forum', function (Blueprint $table) {
             $table->id();
-            $table->string('resourceType');
-            $table->string('content');
-            $table->timestamp('publicationDate');
+            //foranea de user
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            //foranea de forum
+            $table->foreignId('forum_id')->constrained()->onDelete('cascade');
             $table->timestamps();
-
-            //foranea de process log
-            $table->foreignId('process_log_id')->constrained()->onDelete('cascade');
-
         });
     }
 
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('forums');
+        Schema::dropIfExists('user_forum');
     }
 };

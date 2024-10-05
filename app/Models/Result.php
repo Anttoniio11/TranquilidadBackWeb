@@ -10,9 +10,25 @@ class Result extends Model
 {
     use HasFactory;
 
+    //recibe relacion uno a muchos de user
+    public function user (){
+        return $this->belongsTo(User::class,'user_id');
+    }
+
+    //recibe relacion uno a muchos de questionnaire
+    public function questionnaire (){
+        return $this->belongsTo(Questionnaire::class,'questionnaire_id');
+    }
+
+    //relacion de uno a uno con personal goal
+    public function personalGoal (){
+        return  $this->hasOne(PersonalGoal::class);
+    }
+
     //campos que se van para asignasion masiva
     protected $fillable = [
         'resultados',
+        'recomendacion',
         'genero',
         'peso',
         'altura',
@@ -109,21 +125,5 @@ class Result extends Model
         }
         return $query->get();
     }
-
-    //recibe relacion uno a muchos de user
-    public function user (){
-        return $this->belongsTo(User::class,'user_id');
-    }
-
-    //recibe relacion uno a muchos de questionnaire
-    public function questionnaire (){
-        return $this->belongsTo(Questionnaire::class,'questionnaire_id');
-    }
-
-    //recibe relacion de uno a muchos de personal goal
-    public function personagoal (){
-        return $this->belongsTo(PersonalGoal::class);
-    }
-
     
 }

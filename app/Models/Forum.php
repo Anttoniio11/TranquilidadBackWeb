@@ -10,6 +10,18 @@ class Forum extends Model
 {
     use HasFactory;
 
+    // recibe relacion de uno a muchos con process log
+    public function processLogs()
+    {
+        return $this->belongsTo(ProcessLog::class,'process_log_id');
+    }
+
+    //relacion de muchos a muchos con user
+    public function users()
+    {
+        return $this->belongsToMany(ProcessLog::class);
+    }
+
     protected $fillable = [
         'resourceType',
         'content',
@@ -21,13 +33,6 @@ class Forum extends Model
     protected $allowFilter = ['id', 'resourceType', 'content', 'publicationDate'];
 
     protected $allowSort = ['id', 'resourceType', 'publicationDate', 'created_at'];
-
-
-    // relacion uno a muchos con processLog
-    public function processLogs()
-    {
-        return $this->hasMany(ProcessLog::class);
-    }
 
     
     // Scope para incluir relaciones

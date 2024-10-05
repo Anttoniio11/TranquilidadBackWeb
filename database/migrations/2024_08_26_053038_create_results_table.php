@@ -33,10 +33,8 @@ return new class extends Migration
             $table->unsignedBigInteger('questionnaire_id');
             $table->foreign('questionnaire_id')->references('id')->on('questionnaires')->onDelete('cascade');
 
-            //foreign of user or central table of user and food
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
+            //foranea de user
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

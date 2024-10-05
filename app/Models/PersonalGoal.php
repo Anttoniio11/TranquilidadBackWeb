@@ -10,6 +10,16 @@ class PersonalGoal extends Model
 {
     use HasFactory;
 
+    //recibe relacion de uno a uno con result
+    public function result(){
+        return $this->belongsTo(Result::class,"result_id");
+    }
+
+    //recibe relacion de uno a muchos con user 
+    public function user(){
+        return $this->belongsTo(User::class,"user_id");
+    }
+
     protected $fillable = [
         'description',
         'target_value',
@@ -43,19 +53,6 @@ class PersonalGoal extends Model
         'status', 
         'created_at'
     ]; 
-
-
-    //relacion de uno a muchos con result
-    public function results(){
-        return $this->hasMany(Result::class);
-    }
-    
-
-    // recibe relacion uno a muchos con processLog
-    public function processLog()
-    {
-        return $this->belongsTo(ProcessLog::class, 'processLog_id');
-    }
     
 
     // Scope para incluir relaciones
