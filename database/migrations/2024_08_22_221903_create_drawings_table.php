@@ -29,6 +29,7 @@ return new class extends Migration
             
             $table->string('drawing_name');
             $table->string('drawing_url');
+            $table->string('drawing_public_id');
                 
                         
             $table->timestamps();

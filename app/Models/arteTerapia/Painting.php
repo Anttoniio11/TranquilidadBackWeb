@@ -16,7 +16,8 @@ class Painting extends Model
         'gallery_id',
         'template_id',
         'painting_name',
-        'painting_url'    
+        'painting_url',  
+        'painting_public_id'    
     ];
     protected $allowIncluded=['user'];
 

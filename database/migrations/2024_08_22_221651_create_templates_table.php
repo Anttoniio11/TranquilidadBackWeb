@@ -22,6 +22,7 @@ return new class extends Migration
             
             $table->string('template_name');
             $table->string('template_url');
+            $table->string('template_public_id');
                 
             $table->timestamps();
         });

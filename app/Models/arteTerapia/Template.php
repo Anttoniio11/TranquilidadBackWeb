@@ -13,7 +13,8 @@ class Template extends Model
     protected $fillable = [
         'category_id',
         'template_name',
-        'template_url'
+        'template_url',
+        'template_public_id'
     ];
     
     protected $allowIncluded=['category'];

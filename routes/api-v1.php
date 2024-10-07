@@ -36,7 +36,7 @@ Route::controller(CategoryController::class)->group(function(){
     Route::delete('categories/{category}', 'destroy')->name('api.v1.categories.delete');
 });
 
-
+//check template
 Route::controller(TemplateController::class)->group(function(){
     Route::post('templates', 'store')->name('api.v1.templates.store');
     Route::get('templates', 'index')->name('api.v1.templates.index');
@@ -45,6 +45,16 @@ Route::controller(TemplateController::class)->group(function(){
     Route::delete('templates/{id}', 'destroy')->name('api.v1.templates.delete');
 });
 
+//check gallery
+Route::controller(GalleryController::class)->group(function(){
+    Route::post('galleries', 'store')->name('api.v1.galleries.store');
+    Route::get('galleries', 'index')->name('api.v1.galleries.index');
+    Route::get('galleries/{gallery}', 'show')->name('api.v1.galleries.show');
+    Route::put('galleries/{gallery}', 'update')->name('api.v1.galleries.update');
+    Route::delete('galleries/{gallery}', 'destroy')->name('api.v1.galleries.delete');
+});
+
+//check
 Route::controller(PaintingController::class)->group(function(){
     Route::post('paintings', 'store')->name('api.v1.paintings.store');
     Route::get('paintings', 'index')->name('api.v1.paintings.index');
@@ -53,6 +63,7 @@ Route::controller(PaintingController::class)->group(function(){
     Route::delete('paintings/{painting}', 'destroy')->name('api.v1.paintings.delete');
 });
 
+//check
 Route::controller(DrawingController::class)->group(function(){
     Route::post('drawings', 'store')->name('api.v1.drawings.store');
     Route::get('drawings', 'index')->name('api.v1.drawings.index');
@@ -61,13 +72,6 @@ Route::controller(DrawingController::class)->group(function(){
     Route::delete('drawings/{drawing}', 'destroy')->name('api.v1.drawings.delete');
 });
 
-Route::controller(GalleryController::class)->group(function(){
-    Route::post('galleries', 'store')->name('api.v1.galleries.store');
-    Route::get('galleries', 'index')->name('api.v1.galleries.index');
-    Route::get('galleries/{gallery}', 'show')->name('api.v1.galleries.show');
-    Route::put('galleries/{gallery}', 'update')->name('api.v1.galleries.update');
-    Route::delete('galleries/{gallery}', 'destroy')->name('api.v1.galleries.delete');
-});
 
 Route::controller(PublicationController::class)->group(function(){
     Route::post('publications', 'store')->name('api.v1.publications.store');

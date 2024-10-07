@@ -10,8 +10,8 @@ class GalleryController extends Controller
 {
     public function index()
     {
-        //$galleries=Gallery::all();
-        $galleries = Gallery::included()->get();
+        $galleries=Gallery::all();
+        //$galleries = Gallery::included()->get();
         //$galleries=Gallery::included()->filter();
         //$galleries=Gallery::included()->filter()->sort()->get();
         //$galleries=Gallery::included()->filter()->sort()->getOrPaginate();

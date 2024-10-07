@@ -23,6 +23,7 @@ return new class extends Migration
 
             $table->string('publication_description');
             $table->string('publication_url');
+            $table->string('publication_public_id');
             $table->integer('reaction_count');
             $table->integer('shared_count');
                 

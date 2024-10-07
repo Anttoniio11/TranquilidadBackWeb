@@ -34,6 +34,7 @@ return new class extends Migration
             
         $table->string('painting_name');
         $table->string('painting_url');
+        $table->string('painting_public_id');
 
             
             $table->timestamps();

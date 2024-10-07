@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Api\arteTerapia;
 use App\Http\Controllers\Controller;
 use App\Models\arteTerapia\Template;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-use Illuminate\Support\Str;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class TemplateController extends Controller
 {
@@ -36,25 +34,39 @@ class TemplateController extends Controller
         $request->validate([
             'category_id'=> 'required|exists:categories,id',
             'template_name'=> 'required|max:100',
-            'template' => 'nullable|file|mimes:jpg,png|max:2048'
+            'template' => 'required|file|mimes:jpg,png|max:2048'
         ]);
 
-        $data = $request->only(['category_id', 'template_name']);
+        $url=null;
+        $public_id=null;
         
         if($request->hasFile('template')) {
-            $template = $request->file('template');
-            $uploadedFile = Cloudinary::upload($template->getRealPath(),[
+            $template=$request->file('template');
+            
+            //subir el archivo resources/template
+            $cloudinaryImage=Cloudinary::upload($template->getRealPath(),[
                 'folder' => 'resources/templates',
-                'resources_type' => 'auto'
+                'resource_type' => 'image',
             ]);
-                $data['template_url'] = $uploadedFile->getSecurePath();
+            
+
+            //Obtener la URL y el ID público de la imagen
+            $url=$cloudinaryImage->getSecurePath();
+            $public_id=$cloudinaryImage->getPublicId();
             } else {
-                $data['template_url']=null;
+                return response()->json(['message' => 'template is required'],400);
             }
 
-        $Template = Template::create($data);
+        //obtener todos los datos menos el template
+        $templateData=$request->except('template');
+        //añadir url de cloudinary a los datos
+        $templateData['template_url']=$url;
+        $templateData['template_public_id']=$public_id;
 
-        return response()->json($Template);
+        //crear la template con el array de datos completos
+        $newTemplate=Template::create($templateData);
+
+        return response()->json($newTemplate, 201);
     }
 
     /**
@@ -67,7 +79,7 @@ class TemplateController extends Controller
     {  
         
         $Template = Template::find($id);
-
+        //$Gallery = Gallery::included()->findOrFail($id);
         if(!$Template){
             return response()->json(['message'=>'recurso no encontrado']);
         }
@@ -86,47 +98,68 @@ class TemplateController extends Controller
 
     public function update(Request $request, $id)
     {
-    
-    $template = Template::find($id);
-    
-    if (!$template) {
-        return response()->json(['message' => 'Template not found'], 404);
-    }
-    // Validación de los datos
-    $request->validate([
-        'category_id' => 'nullable|exists:categories,id',
-        'template_name' => 'nullable|string|max:100',
-        'template' => 'nullable|file|mimes:jpg,png|max:2048' // Validación del archivo
-    ]);
-    //dd($request->all());
-    
-    // Capturar solo los campos que necesitamos
-    $data = $request->only(['category_id', 'template_name']);
-    //return response()->json($request->all());
-
-    if ($request->hasFile('template')) {
-        // Elimina el archivo anterior si existe
-        if ($template->template_url) {
-            // Extrae el ID público del archivo actual
-            $publicId = basename(parse_url($template->template_url, PHP_URL_PATH));
-            Cloudinary::destroy($publicId);
+        $template = Template::find($id);
+        
+        if (!$template) {
+            return response()->json(['message' => 'Template not found'], 404);
         }
-
-        // Sube el nuevo archivo a Cloudinary
-        $file = $request->file('template');
-        $uploadedFile = Cloudinary::upload($file->getRealPath(), [
-            'folder' => 'resources/templates',
-            'resource_type' => 'auto' // Permite subir imágenes y otros tipos de archivos
+        // Validación de los datos
+        $request->validate([
+            'category_id' => 'nullable|exists:categories,id',
+            'template_name' => 'nullable|string|max:100',
+            'template' => 'nullable|file|mimes:jpg,png|max:2048' // Validación del archivo
         ]);
-        // Guarda la nueva URL del archivo
-        $data['template_url'] = $uploadedFile->getSecurePath();
-    }
+        //return response()->json($template->template_public_id);
+        DB::beginTransaction();
+        try{
+        //verificar nueva img
+        if($request->hasFile('template')){
+            
+            if($template->template_public_id){
+            //eliminar la imagen anterior
+            Cloudinary::destroy($template->template_public_id);
+            }
 
-    // Actualiza los datos del template en la base de datos
-    $template->update($data);
-    
-    // Retorna el template actualizado
-    return response()->json($template);
+            //subir nueva img
+            $uploadedTemplate=$request->file('template');
+            $cloudinaryImage=Cloudinary::upload($uploadedTemplate->getRealPath(),[
+                'folder' => 'resources/templates',
+                'resource_type' => 'image',
+            ]);
+
+            //obtener url y id publico 
+            $url=$cloudinaryImage->getSecurePath();
+            $public_id=$cloudinaryImage->getPublicId();
+            
+            //actualizar las datos de la img de template
+            $template->template_url=$url;
+            $template->template_public_id=$public_id;
+        }
+        
+        //Obtener todos los datos y eliminar la imagen del array
+        $templateData=$request->all();
+        unset($templateData['template']);
+        
+        //actualizar otros campos
+        $template->update(array_merge($templateData, [
+            'template_url' => $url ?? $template->template_url,
+            'template_public_id' => $public_id ?? $template->template_public_id,
+        ]));
+        //return response()->json($request->all(), 200);
+        DB::commit();
+        
+        return response()->json([
+            'message' => 'template update',
+            'template' => $template
+        ], 200);        
+    } catch(\Exception $e){
+        DB::rollBack();
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Error updating product: ' . $e->getMessage()
+        ], 500);
+    }
     }
 
 
@@ -136,9 +169,38 @@ class TemplateController extends Controller
      * @param  \App\Models\Template  $Template
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Template $Template)
+    public function destroy($id)
     {
-        $Template->delete();
-        return response()->json($Template);
+        $template = Template::find($id);
+
+        if(!$template){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'template not found'
+            ],400);
+        }
+
+        DB::beginTransaction();
+        try{
+            //eliminar de cloud
+            Cloudinary::destroy($template->template_public_id);
+
+            //eliminar de la DB
+            $template->delete();
+
+            DB::commit();
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'template deleted successfully'
+            ],200);
+        } catch (\Exception $e){
+            DB::rollBack();
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error deleting template: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

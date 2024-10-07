@@ -35,7 +35,6 @@ class PublicationController extends Controller
             'publication_url'=>'required|max:100',
             'reaction_count'=>'required|max:100',
             'shared_count'=>'required|max:100'
-
         ]);
 
         $Publication = Publication::create($request->all());

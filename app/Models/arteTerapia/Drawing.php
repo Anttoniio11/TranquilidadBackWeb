@@ -12,7 +12,14 @@ class Drawing extends Model
 {
     use HasFactory;
 
-    protected $fillable=['user_id','gallery_id','drawing_name','drawing_url'];
+    protected $fillable=[
+        'user_id',
+        'gallery_id',
+        'drawing_name',
+        'drawing_url',
+        'drawing_public_id'
+    ];
+    
     protected $allowIncluded=['user','gallery'];
 
     public function user(){

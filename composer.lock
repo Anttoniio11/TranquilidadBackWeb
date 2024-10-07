@@ -137,16 +137,16 @@
         },
         {
             "name": "cloudinary-labs/cloudinary-laravel",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cloudinary-community/cloudinary-laravel.git",
-                "reference": "434bb1fff2ef54e68bf5e4e05dbf8cf6bb3cf37b"
+                "reference": "f5c9ca2ecddd5ffa8e04798128b46c065f08ec5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cloudinary-community/cloudinary-laravel/zipball/434bb1fff2ef54e68bf5e4e05dbf8cf6bb3cf37b",
-                "reference": "434bb1fff2ef54e68bf5e4e05dbf8cf6bb3cf37b",
+                "url": "https://api.github.com/repos/cloudinary-community/cloudinary-laravel/zipball/f5c9ca2ecddd5ffa8e04798128b46c065f08ec5e",
+                "reference": "f5c9ca2ecddd5ffa8e04798128b46c065f08ec5e",
                 "shasum": ""
             },
             "require": {
@@ -203,9 +203,9 @@
             ],
             "support": {
                 "issues": "https://github.com/cloudinary-community/cloudinary-laravel/issues",
-                "source": "https://github.com/cloudinary-community/cloudinary-laravel/tree/2.2.1"
+                "source": "https://github.com/cloudinary-community/cloudinary-laravel/tree/2.2.2"
             },
-            "time": "2024-08-14T16:24:55+00:00"
+            "time": "2024-09-25T20:03:40+00:00"
         },
         {
             "name": "cloudinary/cloudinary_php",
